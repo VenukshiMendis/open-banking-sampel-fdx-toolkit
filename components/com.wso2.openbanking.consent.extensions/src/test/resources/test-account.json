@@ -1,0 +1,105 @@
+{
+
+  "data":[
+
+    {
+
+      "account_id":"30080012343456",
+
+      "display_name":"account_1",
+
+      "accountId":"30080012343456",
+
+      "accountName":"account_1",
+
+      "authorizationMethod":"single",
+
+      "nickName":"not-working",
+
+      "customerAccountType":"Individual",
+
+      "type":"TRANS_AND_SAVINGS_ACCOUNTS",
+
+      "isEligible":true,
+
+      "isJointAccount":false,
+
+      "jointAccountConsentElectionStatus":false
+
+    },
+
+    {
+
+      "account_id":"30080098763459",
+
+      "display_name":"account_2",
+
+      "accountId":"30080098763459",
+
+      "accountName":"account_2",
+
+      "authorizationMethod":"single",
+
+      "nickName":"not-working",
+
+      "customerAccountType":"Individual",
+
+      "type":"TRANS_AND_SAVINGS_ACCOUNTS",
+
+      "isEligible":true,
+
+      "isJointAccount":false,
+
+      "jointAccountConsentElectionStatus":false
+
+    },
+
+    {
+
+      "account_id": "30080098971337",
+
+      "display_name": "multi_auth_account",
+
+      "accountId": "30080098971337",
+
+      "accountName": "multi_auth_account",
+
+      "authorizationMethod": "multiple",
+
+      "nickName": "not-working",
+
+      "customerAccountType": "Individual",
+
+      "type": "TRANS_AND_SAVINGS_ACCOUNTS",
+
+      "isEligible": true,
+
+      "isJointAccount": false,
+
+      "jointAccountConsentElectionStatus": false,
+
+      "authorizationUsers": [
+
+        {
+
+          "customer_id": "123",
+
+          "user_id": "psu1@wso2.com@carbon.super",
+
+        },
+
+        {
+
+          "customer_id": "456",
+
+          "user_id": "psu2@wso2.com@carbon.super",
+
+        }
+
+      ]
+
+   }
+
+  ]
+
+}
