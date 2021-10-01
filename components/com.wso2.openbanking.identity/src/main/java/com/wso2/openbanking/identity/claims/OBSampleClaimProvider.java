@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Sample claim provider implementation
  */
-public class SampleClaimProvider extends OBClaimProvider {
+public class OBSampleClaimProvider extends OBClaimProvider {
 
     OBDefaultClaimProvider obDefaultClaimProvider = new OBDefaultClaimProvider();
 

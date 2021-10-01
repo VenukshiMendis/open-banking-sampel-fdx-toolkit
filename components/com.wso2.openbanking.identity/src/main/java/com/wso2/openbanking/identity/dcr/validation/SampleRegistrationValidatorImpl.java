@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * Sample implementation for dcr registration VALIDATOR class
  */
-public class SampleRegistrationValidationImpl extends DefaultRegistrationValidatorImpl {
+public class SampleRegistrationValidatorImpl extends DefaultRegistrationValidatorImpl {
 
     @Override
     public void validatePost(RegistrationRequest registrationRequest) throws DCRValidationException {

@@ -12,15 +12,15 @@
 
 package com.wso2.openbanking.identity.grant.type.handlers;
 
-import com.wso2.openbanking.accelerator.identity.grant.type.handlers.OBClientCredentialsGrantHandler;
+import com.wso2.openbanking.accelerator.identity.grant.type.handlers.OBAuthorizationCodeGrantHandler;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
 
 /**
- * OB specific client credentials code grant handler
+ * OB specific authorization code grant handler
  */
-public class SampleClientCredentialsGrantHandler extends OBClientCredentialsGrantHandler {
+public class SampleOBAuthorizationCodeGrantHandler extends OBAuthorizationCodeGrantHandler {
 
     @Override
     public void executeInitialStep(OAuth2AccessTokenRespDTO oAuth2AccessTokenRespDTO,

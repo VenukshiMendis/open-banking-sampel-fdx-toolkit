@@ -74,6 +74,13 @@
                                                 regex="com.wso2.openbanking.gateway-(\d.*?)\.jar$"/>
                                     </fileset>
                                 </copy>
+                                <copy todir="${project.basedir}/carbon-home/repository/components/dropins" overwrite="true">
+                                    <fileset
+                                            dir="../../components/com.wso2.openbanking.data.publisher/target">
+                                        <filename
+                                                regex="com.wso2.openbanking.data.publisher-(\d.*?)\.jar$"/>
+                                    </fileset>
+                                </copy>
                             </target>
                         </configuration>
                         <goals>

@@ -33,7 +33,7 @@
         <module>com.wso2.openbanking.gateway</module>
         <module>com.wso2.openbanking.identity</module>
         <module>com.wso2.openbanking.consent.extensions</module>
-        <module>com.wso2.openbanking.accelerator.data.publisher</module>
+        <module>com.wso2.openbanking.data.publisher</module>
     </modules>
 
 </project>

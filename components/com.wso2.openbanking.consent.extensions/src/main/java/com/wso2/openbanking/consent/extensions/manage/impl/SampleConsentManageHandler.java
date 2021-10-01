@@ -13,6 +13,7 @@
 package com.wso2.openbanking.consent.extensions.manage.impl;
 
 import com.wso2.openbanking.accelerator.consent.extensions.common.ConsentException;
+import com.wso2.openbanking.accelerator.consent.extensions.manage.impl.DefaultConsentManageHandler;
 import com.wso2.openbanking.accelerator.consent.extensions.manage.model.ConsentManageData;
 import com.wso2.openbanking.accelerator.consent.extensions.manage.model.ConsentManageHandler;
 
@@ -21,38 +22,40 @@ import com.wso2.openbanking.accelerator.consent.extensions.manage.model.ConsentM
  */
 public class SampleConsentManageHandler implements ConsentManageHandler {
 
+    DefaultConsentManageHandler defaultConsentManageHandler = new DefaultConsentManageHandler();
+
     @Override
     public void handleFileUploadPost(ConsentManageData consentManageData) throws ConsentException {
-        ConsentManageHandler.super.handleFileUploadPost(consentManageData);
+        defaultConsentManageHandler.handleFileUploadPost(consentManageData);
     }
 
     @Override
     public void handleFileGet(ConsentManageData consentManageData) throws ConsentException {
-        ConsentManageHandler.super.handleFileGet(consentManageData);
+        defaultConsentManageHandler.handleFileGet(consentManageData);
     }
 
     @Override
     public void handleGet(ConsentManageData consentManageData) throws ConsentException {
-
+        defaultConsentManageHandler.handleGet(consentManageData);
     }
 
     @Override
     public void handlePost(ConsentManageData consentManageData) throws ConsentException {
-
+        defaultConsentManageHandler.handlePost(consentManageData);
     }
 
     @Override
     public void handleDelete(ConsentManageData consentManageData) throws ConsentException {
-
+        defaultConsentManageHandler.handleDelete(consentManageData);
     }
 
     @Override
     public void handlePut(ConsentManageData consentManageData) throws ConsentException {
-
+        defaultConsentManageHandler.handlePut(consentManageData);
     }
 
     @Override
     public void handlePatch(ConsentManageData consentManageData) throws ConsentException {
-
+        defaultConsentManageHandler.handlePatch(consentManageData);
     }
 }

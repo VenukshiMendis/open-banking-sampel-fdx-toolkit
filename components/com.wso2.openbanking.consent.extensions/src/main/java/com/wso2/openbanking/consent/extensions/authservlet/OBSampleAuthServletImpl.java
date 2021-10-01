@@ -12,6 +12,7 @@
 
 package com.wso2.openbanking.consent.extensions.authservlet;
 
+import com.wso2.openbanking.accelerator.consent.extensions.authservlet.impl.OBDefaultAuthServletImpl;
 import com.wso2.openbanking.accelerator.consent.extensions.authservlet.model.OBAuthServletInterface;
 import org.json.JSONObject;
 
@@ -24,30 +25,32 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class OBSampleAuthServletImpl implements OBAuthServletInterface {
 
+    OBDefaultAuthServletImpl obDefaultAuthServlet = new OBDefaultAuthServletImpl();
+
     @Override
     public Map<String, Object> updateRequestAttribute(HttpServletRequest httpServletRequest, JSONObject jsonObject,
                                                       ResourceBundle resourceBundle) {
-        return null;
+        return obDefaultAuthServlet.updateRequestAttribute(httpServletRequest, jsonObject, resourceBundle);
     }
 
     @Override
     public Map<String, Object> updateSessionAttribute(HttpServletRequest httpServletRequest, JSONObject jsonObject,
                                                       ResourceBundle resourceBundle) {
-        return null;
+        return obDefaultAuthServlet.updateSessionAttribute(httpServletRequest, jsonObject, resourceBundle);
     }
 
     @Override
     public Map<String, Object> updateConsentData(HttpServletRequest httpServletRequest) {
-        return null;
+        return obDefaultAuthServlet.updateConsentData(httpServletRequest);
     }
 
     @Override
     public Map<String, String> updateConsentMetaData(HttpServletRequest httpServletRequest) {
-        return null;
+        return obDefaultAuthServlet.updateConsentMetaData(httpServletRequest);
     }
 
     @Override
     public String getJSPPath() {
-        return null;
+        return obDefaultAuthServlet.getJSPPath();
     }
 }

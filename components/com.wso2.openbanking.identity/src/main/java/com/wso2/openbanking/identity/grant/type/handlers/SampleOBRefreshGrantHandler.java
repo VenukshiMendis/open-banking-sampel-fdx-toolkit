@@ -20,7 +20,7 @@ import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
 /**
  * OB specific refresh grant handler
  */
-public class SampleRefreshGrantHandler extends OBRefreshGrantHandler {
+public class SampleOBRefreshGrantHandler extends OBRefreshGrantHandler {
 
     @Override
     public void executeInitialStep(OAuth2AccessTokenRespDTO oAuth2AccessTokenRespDTO,

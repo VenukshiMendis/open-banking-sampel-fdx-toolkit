@@ -26,13 +26,6 @@ public class SampleRequestObjectValidator extends OBRequestObjectValidator {
 
     DefaultOBRequestObjectValidator defaultOBRequestObjectValidator = new DefaultOBRequestObjectValidator();
 
-    /**
-     * Perform validation and return the error message if any, else null.
-     *
-     * @param obRequestObject request object
-     * @param dataMap provides scope related data needed for validation from service provider meta data
-     * @return the response object with error message.
-     */
     @Override
     public ValidationResponse validateOBConstraints(OBRequestObject obRequestObject, Map<String, Object> dataMap) {
 

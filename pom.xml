@@ -278,6 +278,11 @@
                 <artifactId>com.wso2.openbanking.consent.extensions</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.wso2.openbanking</groupId>
+                <artifactId>com.wso2.openbanking.data.publisher</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!--Dependencies for IAM -->
             <dependency>
