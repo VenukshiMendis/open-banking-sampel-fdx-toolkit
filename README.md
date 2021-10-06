@@ -34,13 +34,13 @@ To build WSO2 Open Banking Sample Toolkit from the source code:
    | ```mvn clean install``` | This cleans the folders and starts building the solution pack from scratch. |
    | ```mvn clean install -P solution``` | This cleans the folders and starts building the solution pack from scratch. Finally creates the toolkit zip files containing the artifacts required to setup the toolkit. |
 
-   1. Once the build is created, navigate to the relevant folder to get the toolkit for each product.
+1. Once the build is created, navigate to the relevant folder to get the toolkit for each product.
 
    |  Product | Toolkit Path |
-         | :--- |:--- |
+      | :--- |:--- |
    | ```Identity Server``` | `/open-banking-sample-toolkit/toolkits/ob-apim/target` |
    | ```API Manager``` | `/open-banking-sample-toolkit/toolkits/ob-is/target` |
-   | ```Business Intelligence``` | `/open-banking-sample-toolkit/toolkits/ob-bi/target` |
+   | ```Stream Integrator``` | `/open-banking-sample-toolkit/toolkits/ob-bi/target` |
 
 
 ### Running the products
