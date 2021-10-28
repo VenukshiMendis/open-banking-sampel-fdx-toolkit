@@ -49,8 +49,8 @@ Please refer the following READ.ME files to run the products.
 
 |  Product | Instructions Path |
 | :--- |:--- |
-| ```Identity Server``` | `/wso2ob-apim-toolkit-1.0.0/READ.ME` |
-| ```API Manager``` | `/wso2ob-is-toolkit-1.0.0/READ.ME` |
+| ```Identity Server``` | `/wso2ob-obiam-toolkit-1.0.0/READ.ME` |
+| ```API Manager``` | `/wso2-apim-toolkit-1.0.0/READ.ME` |
 | ```Business Intelligence``` | `/wso2ob-bi-toolkit-1.0.0/READ.ME` |
 
 

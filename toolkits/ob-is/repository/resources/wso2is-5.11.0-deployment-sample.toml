@@ -359,9 +359,6 @@ request_object_validator = "com.wso2.openbanking.accelerator.identity.auth.exten
 type = "request_uri_param_value_builder"
 class = "com.wso2.openbanking.accelerator.identity.builders.DefaultOBRequestUriRequestObjectBuilder"
 
-[open_banking.identity.extensions]
-claim_provider="com.wso2.openbanking.identity.claims.OBSampleClaimProvider"
-
 #================configs related to identity-event.properties=============
 
 [[event_handler]]
@@ -503,6 +500,7 @@ servlet_extension = "com.wso2.openbanking.consent.extensions.authservlet.OBSampl
 [open_banking.identity.extensions]
 request_object_validator="com.wso2.openbanking.identity.auth.extensions.request.validator.SampleRequestObjectValidator"
 push_auth_request_validator="com.wso2.openbanking.accelerator.identity.push.auth.extension.request.validator.PushAuthRequestValidator"
+claim_provider="com.wso2.openbanking.identity.claims.OBSampleClaimProvider"
 
 [open_banking.identity.application_information_webapp]
 sp_metadata_filter="com.wso2.openbanking.accelerator.identity.sp.metadata.extension.impl.DefaultSPMetadataFilter"

@@ -23,7 +23,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>wso2ob-apim-toolkit</artifactId>
+    <artifactId>wso2-obapim-toolkit</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Open Banking - Sample API Manager Toolkit Module</name>
     <url>http://wso2.org</url>
@@ -110,6 +110,4 @@
 
         </plugins>
     </build>
-
-
 </project>

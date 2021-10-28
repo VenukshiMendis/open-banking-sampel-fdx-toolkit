@@ -23,7 +23,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>wso2ob-is-toolkit</artifactId>
+    <artifactId>wso2-obiam-toolkit</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Open Banking - Identity Server Toolkit Module</name>
     <url>http://wso2.org</url>
@@ -106,6 +106,4 @@
 
         </plugins>
     </build>
-
-
 </project>
