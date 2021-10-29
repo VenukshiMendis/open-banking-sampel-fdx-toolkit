@@ -23,7 +23,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>wso2ob-bi-toolkit</artifactId>
+    <artifactId>wso2-obbi-toolkit</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Open Banking - Sample Business Intelligence Toolkit Module</name>
     <url>http://wso2.org</url>
