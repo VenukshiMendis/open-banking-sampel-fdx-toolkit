@@ -38,6 +38,10 @@
             <artifactId>com.wso2.openbanking.accelerator.authentication.data.publisher</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
+            <artifactId>org.wso2.carbon.identity.oauth</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

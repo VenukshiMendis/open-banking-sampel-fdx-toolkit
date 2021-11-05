@@ -563,7 +563,6 @@
         <apache.synapse.version>2.1.7-wso2v147</apache.synapse.version>
         <mockito.version>1.10.19</mockito.version>
         <org.testng.version>7.3.0</org.testng.version>
-        <identity.inbound.auth.oauth.version>6.4.111</identity.inbound.auth.oauth.version>
         <carbon.identity.framework.version>5.18.144</carbon.identity.framework.version>
         <carbon.identity.version>5.19.32</carbon.identity.version>
         <identity.inbound.auth.oauth.version>6.4.111</identity.inbound.auth.oauth.version>

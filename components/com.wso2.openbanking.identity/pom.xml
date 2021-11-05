@@ -40,6 +40,10 @@
             <artifactId>com.wso2.openbanking.accelerator.identity</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
+            <artifactId>org.wso2.carbon.identity.oauth</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.wso2</groupId>
             <artifactId>com.wso2.openbanking.accelerator.consent.service</artifactId>
         </dependency>
