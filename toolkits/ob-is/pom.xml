@@ -35,22 +35,6 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <delete>
-                                    <fileset dir="${project.basedir}/carbon-home/repository/components/lib">
-                                        <filename
-                                                regex="(com.wso2.openbanking).*-(\d.*?)\.jar$"/>
-                                    </fileset>
-                                </delete>
-                            </tasks>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>create-solution</id>
                         <phase>package</phase>
                         <configuration>
