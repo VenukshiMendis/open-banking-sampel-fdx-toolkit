@@ -617,6 +617,6 @@
         <axiom.wso2.version>1.2.11-wso2v16</axiom.wso2.version>
 
         <!-- Open Banking Accelerator Version-->
-        <openbanking.accelerator.version>3.0.0</openbanking.accelerator.version>
+        <openbanking.accelerator.version>[3.0.0,4.0.0)</openbanking.accelerator.version>
     </properties>
 </project>
