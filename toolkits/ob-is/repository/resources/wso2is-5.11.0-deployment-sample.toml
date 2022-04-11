@@ -494,6 +494,16 @@ alias="wso2carbon"
 [open_banking.consent.admin]
 handler="com.wso2.openbanking.accelerator.consent.extensions.admin.impl.DefaultConsentAdminHandler"
 
+[open_banking.consent.periodical_expiration]
+# This property needs to be true in order to run the consent expiration periodical updater.
+enabled=true
+# Cron value for the periodical updater. "0 0 0 * * ?" cron will describe as 00:00:00am every day
+cron_value="0 0 0 * * ?"
+# This value to be update for expired consents.
+expired_consent_status_value="Expired"
+# These consent statuses will only be consider when checking for expired consents. (Comma separated value list)
+eligible_statuses="authorised"
+
 [open_banking.identity.authentication_webapp]
 servlet_extension = "com.wso2.openbanking.consent.extensions.authservlet.OBSampleAuthServletImpl"
 
@@ -519,3 +529,9 @@ transport_jwks_uri = "software_jwks_endpoint"
 [open_banking.http_connection_pool]
 max_connections = 2000
 max_connections_per_route = 1500
+
+#===================for event==============================
+[open_banking.event]
+queue_size = 32768
+worker_thread_count = 10
+event_executor = "com.wso2.openbanking.accelerator.common.event.executor.DefaultOBEventExecutor"

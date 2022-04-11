@@ -400,6 +400,10 @@ sp_name_regex = "^[\\sa-zA-Z0-9._-]*$"
 [database.local]
 url = "jdbc:h2:./repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE"
 
+#================configs related to synapse.properties=============
+[synapse_properties]
+'synapse.commons.json.output.xmloutMultiplePI' = true
+
 #================configs related to open-banking.xml=============
 
 [open_banking]
@@ -624,3 +628,9 @@ roles = "PISP"
 [open_banking.http_connection_pool]
 max_connections = 2000
 max_connections_per_route = 1500
+
+#===================for event==============================
+[open_banking.event]
+queue_size = 32768
+worker_thread_count = 10
+event_executor = "com.wso2.openbanking.accelerator.common.event.executor.DefaultOBEventExecutor"
