@@ -188,10 +188,10 @@ config_endpoint = "https://analytics-event-auth.st.choreo.dev/auth/v1"
 auth_token = ""
 properties.'publisher.reporter.class' = "com.wso2.openbanking.accelerator.gateway.reporter.OBAnalyticsMetricReporter"
 
-[apim.key_manager]
-service_url = "https://IS_HOSTNAME:9446${carbon.context}services/"
-type = "WSO2-IS"
-key_manager_client_impl = "org.wso2.carbon.apimgt.impl.AMDefaultKeyManagerImpl"
+#[apim.key_manager]
+#service_url = "https://IS_HOSTNAME:9446${carbon.context}services/"
+#type = "WSO2-IS"
+#key_manager_client_impl = "org.wso2.carbon.apimgt.impl.AMDefaultKeyManagerImpl"
 #username = "$ref{super_admin.username}"
 #password = "$ref{super_admin.password}"
 #pool.init_idle_capacity = 50
