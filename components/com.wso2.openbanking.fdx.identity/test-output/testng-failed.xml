@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [identity-base-test-suite]" guice-stage="DEVELOPMENT">
+  <test thread-count="5" name="fdx-dcr-test-all(failed)">
+    <classes>
+      <class name="com.wso2.openbanking.fdx.identity.dcr.FDXDCRValidationTest">
+        <methods>
+          <include name="testClientNameExists"/>
+          <include name="beforeClass"/>
+        </methods>
+      </class> <!-- com.wso2.openbanking.fdx.identity.dcr.FDXDCRValidationTest -->
+    </classes>
+  </test> <!-- fdx-dcr-test-all(failed) -->
+</suite> <!-- Failed suite [identity-base-test-suite] -->

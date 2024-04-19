@@ -14,7 +14,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>open-banking-sample-toolkit</artifactId>
+        <artifactId>ob-compliance-toolkit-fdx</artifactId>
         <groupId>com.wso2.openbanking</groupId>
         <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
@@ -22,7 +22,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>open-banking-sample-toolkit-components</artifactId>
+    <artifactId>ob-compliance-toolkit-fdx-main-components</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
 
@@ -30,10 +30,11 @@
     <description>WSO2 Open Banking Sample Toolkit</description>
 
     <modules>
-        <module>com.wso2.openbanking.gateway</module>
-        <module>com.wso2.openbanking.identity</module>
-        <module>com.wso2.openbanking.consent.extensions</module>
-        <module>com.wso2.openbanking.data.publisher</module>
+        <module>com.wso2.openbanking.fdx.common</module>
+        <module>com.wso2.openbanking.fdx.gateway</module>
+        <module>com.wso2.openbanking.fdx.identity</module>
+        <module>com.wso2.openbanking.fdx.consent.extensions</module>
+        <module>com.wso2.openbanking.fdx.data.publisher</module>
     </modules>
 
 </project>

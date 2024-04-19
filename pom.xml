@@ -15,7 +15,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.wso2.openbanking</groupId>
-    <artifactId>open-banking-sample-toolkit</artifactId>
+    <artifactId>ob-compliance-toolkit-fdx</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
 

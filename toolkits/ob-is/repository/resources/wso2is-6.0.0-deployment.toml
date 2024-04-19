@@ -1,6 +1,6 @@
 #================configs related to carbon.xml=============
 [server]
-hostname = "IS_HOSTNAME"
+hostname = "localhost"
 node_ip = "127.0.0.1"
 base_path = "https://$ref{server.hostname}:${carbon.management.port}"
 serverDetails = "WSO2 IS as KM 5.11.0"
@@ -49,10 +49,10 @@ GetAllRolesOfUserEnabled = false
 
 # for registry data
 [database.shared_db]
-url = "DB_GOV_URL"
-username = "DB_USER"
-password = "DB_PASS"
-driver = "DB_DRIVER"
+url = "jdbc:mysql://localhost:3306/openbank_govdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "Heirs2013#"
+driver = "com.mysql.jdbc.Driver"
 
 [database.shared_db.pool_options]
 maxActive = "150"
@@ -67,10 +67,10 @@ defaultAutoCommit=false
 
 # for api manager data
 [database.identity_db]
-url = "DB_APIMGT_URL"
-username = "DB_USER"
-password = "DB_PASS"
-driver = "DB_DRIVER"
+url = "jdbc:mysql://localhost:3306/openbank_apimgtdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "Heirs2013#"
+driver = "com.mysql.jdbc.Driver"
 
 [database.identity_db.pool_options]
 maxActive = "150"
@@ -85,10 +85,10 @@ defaultAutoCommit=false
 
 # for km-config registry
 [database.config]
-url = "DB_IS_CONFIG_URL"
-username = "DB_USER"
-password = "DB_PASS"
-driver = "DB_DRIVER"
+url = "jdbc:mysql://localhost:3306/openbank_iskm_configdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "Heirs2013#"
+driver = "com.mysql.jdbc.Driver"
 
 [database.config.pool_options]
 maxActive = "150"
@@ -103,10 +103,10 @@ defaultAutoCommit=false
 
 # for user-mgt data
 [database.user]
-url = "DB_USER_STORE_URL"
-username = "DB_USER"
-password = "DB_PASS"
-driver = "DB_DRIVER"
+url = "jdbc:mysql://localhost:3306/openbank_userdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "Heirs2013#"
+driver = "com.mysql.jdbc.Driver"
 
 [database.user.pool_options]
 maxActive = "150"
@@ -122,10 +122,10 @@ defaultAutoCommit=false
 # for Open Banking  data
 [[datasource]]
 id="WSO2OB_DB"
-url = "DB_OB_STORE_URL"
-username = "DB_USER"
-password = "DB_PASS"
-driver = "DB_DRIVER"
+url = "jdbc:mysql://localhost:3306/openbank_openbankingdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "Heirs2013#"
+driver = "com.mysql.jdbc.Driver"
 jmx_enable=false
 pool_options.maxActive = "150"
 pool_options.maxWait = "60000"
@@ -140,8 +140,8 @@ pool_options.defaultAutoCommit=false
 #================configs related to application-authentication.xml=============
 
 [authentication.endpoints]
-login_url = "https://IS_HOSTNAME:9446/authenticationendpoint/login.do"
-retry_url = "https://IS_HOSTNAME:9446/authenticationendpoint/retry.do"
+login_url = "https://localhost:9446/authenticationendpoint/login.do"
+retry_url = "https://localhost:9446/authenticationendpoint/retry.do"
 
 [authentication.endpoint.redirect_params]
 filter_policy = "include"
@@ -158,7 +158,7 @@ name = "IdentifierExecutor"
 parameters.ValidateUsername = true
 parameters.throttleLimit = 3
 parameters.throttleTimePeriod = 300
-parameters.authRequestURL = "https://IS_HOSTNAME:9446/api/identity/auth/v1.1/data/AuthRequestKey/"
+parameters.authRequestURL = "https://localhost:9446/api/identity/auth/v1.1/data/AuthRequestKey/"
 
 
 #================configs related to identity.xml=============
@@ -173,8 +173,8 @@ allowed_scopes = ["consent.*"]
 renew_refresh_token = false
 
 [oauth.endpoints]
-oauth2_consent_page = "${carbon.protocol}://IS_HOSTNAME:${carbon.management.port}/ob/authenticationendpoint/oauth2_authz.do"
-oidc_consent_page = "${carbon.protocol}://IS_HOSTNAME:${carbon.management.port}/ob/authenticationendpoint/oauth2_consent.do"
+oauth2_consent_page = "${carbon.protocol}://localhost:${carbon.management.port}/ob/authenticationendpoint/oauth2_authz.do"
+oidc_consent_page = "${carbon.protocol}://localhost:${carbon.management.port}/ob/authenticationendpoint/oauth2_consent.do"
 
 [oauth.response_type]
 token.enable = true
@@ -200,8 +200,8 @@ order = 1
 [event_listener.properties]
 PreventTokenReuse= false
 RejectBeforeInMinutes= "100"
-TokenEndpointAlias= "https://IS_HOSTNAME:9446/oauth2/token"
-notification_endpoint = "https://APIM_HOSTNAME:9443/internal/data/v1/notify"
+TokenEndpointAlias= "https://localhost:9446/oauth2/token"
+notification_endpoint = "https://localhost:9443/internal/data/v1/notify"
 username = "${admin.username}"
 password = "${admin.password}"
 'header.X-WSO2-KEY-MANAGER' = "WSO2-IS"
@@ -278,7 +278,7 @@ allowed_auth_handlers = ["BasicAuthentication"]
 
 [[resource.access_control]]
 context = "(.*)/api/openbanking/push-authorization/(.*)"
-secure="true"
+secure="false"
 http_method="all"
 permissions=["/permission/admin"]
 allowed_auth_handlers = ["BasicAuthentication"]
@@ -290,10 +290,12 @@ http_method="all"
 permissions=["/permission/admin"]
 allowed_auth_handlers = ["BasicAuthentication"]
 
+
 [[resource.access_control]]
 context = "(.*)/consentmgr(.*)"
 secure="false"
 http_method="GET, DELETE"
+
 
 [[resource.access_control]]
 context = "(.*)/api/openbanking/application/(.*)"
@@ -301,7 +303,7 @@ secure="false"
 http_method="GET"
 
 [authentication.adaptive.event_publisher]
-url = "http://IS_HOSTNAME:8006/"
+url = "http://localhost:8006/"
 
 [tenant_context.rewrite]
 custom_webapps = ["/keymanager-operations/"]
@@ -377,11 +379,14 @@ connection_verification_timeout=1
 
 #=======================dcr configs======================
 [open_banking.dcr]
-validator = "com.wso2.openbanking.identity.dcr.validation.SampleRegistrationValidatorImpl"
-jwks_url_sandbox = "https://keystore.openbankingtest.org.uk/0015800001HQQrZAAX/9b5usDpbNtmxDcTzs7GzKp.jwks"
-jwks_url_production = "https://keystore.openbankingtest.org.uk/0015800001HQQrZAAX/9b5usDpbNtmxDcTzs7GzKp.jwks"
+validator = "validation.dcr.com.wso2.openbanking.fdx.identity.FDXRegistrationValidatorImpl"
+jwks_url_sandbox = "https://keystore.openbankingtest.org.uk/0015800001HQQrZAAX/oQ4KoaavpOuoE7rvQsZEOV.jwks"
+jwks_url_production = "https://keystore.openbankingtest.org.uk/0015800001HQQrZAAX/oQ4KoaavpOuoE7rvQsZEOV.jwks"
 applicationupdater = "application.listener.com.wso2.openbanking.fdx.identity.SampleApplicationUpdaterImpl"
+append_registration_attributes_in_response = true
 use_softwareIdForAppName = true
+
+
 #jwks_endpoint_name = ""
 [open_banking.dcr.jwks_retriever]
 connection_timeout = 3000
@@ -389,6 +394,15 @@ read_timeout = 3000
 
 [[open_banking.dcr.regulatory_issuers.iss]]
 name = "OpenBanking Ltd"
+
+[open_banking.dcr.registration.redirect_uris]
+required = true
+
+[open_banking.dcr.registration.token_endpoint_authentication]
+required = false
+
+
+
 
 #Signature algorithm types that are allowed
 #[[open_banking.signature_validation.allowed_algorithms]]
@@ -414,11 +428,11 @@ name = "OpenBanking Ltd"
 #allowed_values = ["web"]
 
 [open_banking.data_publishing]
-enable = false
+enable = true
 username="$ref{super_admin.username}@carbon.super"
 password="$ref{super_admin.password}"
-server_url = "{tcp://BI_HOSTNAME:7612}"
-#auth_url = "{ssl://BI_HOSTNAME:7612}"
+server_url = "{tcp://localhost:7612}"
+#auth_url = "{ssl://localhost:7612}"
 protocol = "Thrift"
 pool_size = 10
 queue_size = 32768
@@ -454,11 +468,28 @@ priority=6
 required=true
 type="long"
 
+
 [[open_banking.data_publishing.thrift.stream]]
 name="AccessTokenInputStream"
 [[open_banking.data_publishing.thrift.stream.attributes]]
 name="accessTokenID"
 priority=1
+
+
+[[open_banking.data_publishing.thrift.stream]]
+name="DCRInputStream"
+[[open_banking.data_publishing.thrift.stream.attributes]]
+name="applicationName"
+priority=1
+[[open_banking.data_publishing.thrift.stream.attributes]]
+name="username"
+priority=2
+[[open_banking.data_publishing.thrift.stream.attributes]]
+name="isManagementApp"
+priority=3
+[[open_banking.data_publishing.thrift.stream.attributes]]
+name="regulatory"
+priority=4
 
 #================custom filters and filter-mappings==============
 [[tomcat.filter]]
@@ -504,6 +535,18 @@ expired_consent_status_value="Expired"
 # These consent statuses will only be consider when checking for expired consents. (Comma separated value list)
 eligible_statuses="authorised"
 
+[open_banking.consent.portal.client_credentials]
+client_id="mJMzMa8Di1vrrmfGgrPqlzfNGN0a"
+client_secret="68_cT6smLQtNskn23hgZQKShvAQa"
+
+[open_banking.consent.portal.params]
+identity_server_base_url="https://localhost:9446"
+api_manager_server_base_url="https://localhost:8243"
+
+[open_banking.identity]
+consent_id_claim_name = "fdxConsentId"
+
+
 [open_banking.identity.authentication_webapp]
 servlet_extension = "com.wso2.openbanking.consent.extensions.authservlet.OBSampleAuthServletImpl"
 
@@ -515,9 +558,9 @@ claim_provider="claims.com.wso2.openbanking.fdx.identity.OBSampleClaimProvider"
 [open_banking.identity.application_information_webapp]
 sp_metadata_filter="com.wso2.openbanking.accelerator.identity.sp.metadata.extension.impl.DefaultSPMetadataFilter"
 
-#[open_banking.push_authorisation]
-#expiry_time=60
-#request_uri_sub_string=""
+[open_banking.push_authorisation]
+expiry_time= 1800 # initially this was 60 - changed by me
+request_uri_sub_string="etf:params:oauth:request_uri"
 
 [open_banking.identity.mutualtls]
 #This property needs to be true if the certificate should be decoded when it is passed from the load balancer to the Gateway.
@@ -535,3 +578,7 @@ max_connections_per_route = 1500
 queue_size = 32768
 worker_thread_count = 10
 event_executor = "com.wso2.openbanking.accelerator.common.event.executor.DefaultOBEventExecutor"
+
+
+[application_mgt]
+enable_role_validation = true

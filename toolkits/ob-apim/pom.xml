@@ -69,16 +69,16 @@
                                 <!-- Copying jars to lib -->
                                 <copy todir="${project.basedir}/carbon-home/repository/components/lib" overwrite="true">
                                     <fileset
-                                            dir="../../components/com.wso2.openbanking.gateway/target">
+                                            dir="../../components/com.wso2.openbanking.fdx.gateway/target">
                                         <filename
-                                                regex="com.wso2.openbanking.gateway-(\d.*?)\.jar$"/>
+                                                regex="com.wso2.openbanking.fdx.gateway-(\d.*?)\.jar$"/>
                                     </fileset>
                                 </copy>
                                 <copy todir="${project.basedir}/carbon-home/repository/components/dropins" overwrite="true">
                                     <fileset
-                                            dir="../../components/com.wso2.openbanking.data.publisher/target">
+                                            dir="../../components/com.wso2.openbanking.fdx.data.publisher/target">
                                         <filename
-                                                regex="com.wso2.openbanking.data.publisher-(\d.*?)\.jar$"/>
+                                                regex="com.wso2.openbanking.fdx.data.publisher-(\d.*?)\.jar$"/>
                                     </fileset>
                                 </copy>
                             </target>
