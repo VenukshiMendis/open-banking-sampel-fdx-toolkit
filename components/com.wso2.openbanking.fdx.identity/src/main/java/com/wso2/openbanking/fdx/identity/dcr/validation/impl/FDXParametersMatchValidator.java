@@ -11,9 +11,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -33,40 +30,30 @@ public class FDXParametersMatchValidator implements ConstraintValidator<Validate
                 (FDXSoftwareStatementBody) fdxRegistrationRequest.getSoftwareStatementBody();
         try {
             for (Field field : fdxRegistrationRequest.getClass().getDeclaredFields()) {
+                if (!field.isSynthetic()) {
+                    // Get the value of the field from the fdxRegistrationRequest object
+                    field.setAccessible(true);
+                    Object requestValue = field.get(fdxRegistrationRequest);
 
-                // Get the value of the field from the fdxRegistrationRequest object
-                field.setAccessible(true);
-                Object requestValue = field.get(fdxRegistrationRequest);
+                    // Get the same field from fdxSoftwareStatement using field name
 
-                // Get the same field from fdxSoftwareStatement using field name
-                Field ssaField = FieldUtils.getField(fdxSoftwareStatementBody.getClass(), field.getName(), true);
-                ssaField.setAccessible(true);
-                Object ssaValue = ssaField.get(fdxSoftwareStatementBody);
+                    Field ssaField = FieldUtils.getField(fdxSoftwareStatementBody.getClass(), field.getName(), true);
 
-                // compare SSA field value with the value in registration request
-                if (!requestValue.equals(ssaValue)) {
-                    SerializedName annotation = field.getAnnotation(SerializedName.class);
-                    constraintValidatorContext.disableDefaultConstraintViolation();
-                    constraintValidatorContext
-                            .buildConstraintViolationWithTemplate("Provided " + annotation.value() +
-                                    "value does not match with the SSA:" + DCRCommonConstants.INVALID_META_DATA)
-                            .addConstraintViolation();
-                    return false;
+
+                    ssaField.setAccessible(true);
+                    Object ssaValue = ssaField.get(fdxSoftwareStatementBody);
+
+                    // compare SSA field value with the value in registration request
+                    if (!requestValue.equals(ssaValue)) {
+                        SerializedName annotation = field.getAnnotation(SerializedName.class);
+                        constraintValidatorContext.disableDefaultConstraintViolation();
+                        constraintValidatorContext
+                                .buildConstraintViolationWithTemplate("Provided " + annotation.value() +
+                                        " value does not match with the SSA:" + DCRCommonConstants.INVALID_META_DATA)
+                                .addConstraintViolation();
+                        return false;
+                    }
                 }
-
-
-            }
-
-            //check whether redirect uris in request match with the redirect uris in SSA
-            List<String> redirectURIsFromRequest = fdxRegistrationRequest.getCallbackUris();
-            List<String> redirectURIsFromSSA = fdxRegistrationRequest.getSoftwareStatementBody().getCallbackUris();
-
-            if (!matchRedirectURIs(redirectURIsFromRequest, redirectURIsFromSSA)) {
-                constraintValidatorContext.disableDefaultConstraintViolation();
-                constraintValidatorContext.
-                        buildConstraintViolationWithTemplate("Provided redirect Uris do not match with the SSA:"
-                                + DCRCommonConstants.INVALID_META_DATA).addConstraintViolation();
-                return false;
             }
 
         } catch (IllegalAccessException e) {
@@ -74,12 +61,9 @@ public class FDXParametersMatchValidator implements ConstraintValidator<Validate
             return false;
 
         }
+
         return true;
     }
 
 
-    private boolean matchRedirectURIs(List<String> redirectUrisRequest, List<String> redirectUrisSoftwareStatement) {
-        Set<String> redirectURIsFromRequest = new HashSet<>(redirectUrisRequest);
-        return redirectURIsFromRequest.equals(new HashSet<>(redirectUrisSoftwareStatement));
-    }
 }

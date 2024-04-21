@@ -23,11 +23,15 @@ import com.wso2.openbanking.accelerator.identity.dcr.model.RegistrationRequest;
 import com.wso2.openbanking.accelerator.identity.dcr.validation.DCRCommonConstants;
 import com.wso2.openbanking.accelerator.identity.dcr.validation.validationgroups.AttributeChecks;
 import com.wso2.openbanking.accelerator.identity.dcr.validation.validationgroups.MandatoryChecks;
+
 import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateDurationPeriod;
 import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateDurationType;
 import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateFDXParametersMatch;
 import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateMaximumPeriod;
+import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateRedirectURIsMatch;
 import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateScopes;
+
+
 
 
 import java.util.List;
@@ -46,6 +50,8 @@ import javax.validation.constraints.NotEmpty;
         durationTypeProperty = "durationType", message = "Duration period is required for time_bound duration type:" +
         DCRCommonConstants.INVALID_META_DATA, groups = AttributeChecks.class)
 @ValidateFDXParametersMatch(message = "Provided request parameters do not match with the SSA:" +
+        DCRCommonConstants.INVALID_META_DATA, groups = AttributeChecks.class)
+@ValidateRedirectURIsMatch(message = "Provided redirect URIs do not match with the SSA:" +
         DCRCommonConstants.INVALID_META_DATA, groups = AttributeChecks.class)
 public class FDXRegistrationRequest extends RegistrationRequest {
     @SerializedName("client_name")
