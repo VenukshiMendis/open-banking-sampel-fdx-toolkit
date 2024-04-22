@@ -77,54 +77,10 @@ public class RegistrationTestConstants {
             "kZNzHDYxibXnNUXX5YHGf1uuHlun6GysFXWw6wTla3txD25tmZ5SSlOIJJ0Kdb-j3yfp5QH5IAmzexjyXBRu-8onHEgjqK1Mfc" +
             "I-5GmB0lRjWVvkpfAhQ5Zwuy_DPg";
 
-    public static String registrationRequestJsonWithInvalidRegistryReferences = "{\n" +
-            "  \"iss\": \"pP2KoaavpOuoE7rvQsZEuE6\",\n" +
-            "  \"iat\": 1694075713,\n" +
-            "  \"exp\": 2147483646,\n" +
-            "  \"jti\": \"37747cd1c10545699f754adf28b73e32\",\n" +
-            "  \"aud\": \"https://secure.api.dataholder.com/issuer\",\n" +
-            "  \"redirect_uris\": [\n" +
-            "    \"https://www.mockcompany.com/redirects/redirect1\"\n" +
-            "  ],\n" +
-            " \"token_endpoint_auth_signing_alg\": \"PS256\",\n" +
-            " \"token_endpoint_auth_method\": \"private_xcdfkey_jwt\",\n" +
-            "  \"grant_types\": [\n" +
-            "    \"client_credentials\",\n" +
-            "    \"authorization_code\",\n" +
-            "    \"refresh_token\",\n" +
-            "    \"urn:ietf:params:oauth:grant-type:jwt-bearer\"\n" +
-            "  ],\n" +
-            "  \"response_types\": [\n" +
-            "    \"code id_token\"\n" +
-            "  ],\n" +
-            "  \"application_type\": \"web\",\n" +
-            "  \"id_token_signed_response_alg\": \"PS256\",\n" +
-            "  \"id_token_encrypted_response_alg\": \"RSA-OAEP\",\n" +
-            "  \"id_token_encrypted_response_enc\": \"A256GCM\",\n" +
-            "  \"request_object_signing_alg\": \"PS256\",\n" +
-            "  \"scope\": \"ACCOUNT_DETAILED  ACCOUNT_PAYMENTS TRANSACTIONS openid\",\n" +
-            "  \"client_name\": \"My Example Client\", \n" +
-            "  \"description\": \"Recipient application for specified financial use case\", \n" +
-            "  \"logo_uri\": \"https://client.example.org/logo.png\", \n" +
-            "  \"client_uri\": \"https://example.net/\", \n" +
-            "  \"contacts\": [\"support@example.net\"], \n" +
-            "  \"duration_type\": [\"time_bound\",\"one_time\"], \n" +
-            "  \"duration_period\": 65, \n" +
-            "  \"lookback_period\": 265, \n" +
-            "  \"registry_references\": [  \n" +
-            "  { \n" +
+    public static String registryReference = "{ \n" +
+            "    \"registered_entity_name\": \"Data recipient company legal name\", \n" +
             "    \"registered_entity_id\": \"4HCHXIURY78NNH6JH\", \n" +
             "    \"registry\": \"GLIEF\" \n" +
-            "  },\n" +
-            "  { \n" +
-            "    \"registered_entity_name\": \"Sample company name\", \n" +
-            "    \"registered_entity_id\": \"4HCHXYTU78NNH6JH\", \n" +
-            "    \"registry\": \"GLIEF\" \n" +
-            "  }],\n" +
-            "  \"software_statement\":" + RegistrationTestConstants.SSA +
-            "}";
-
-
-
+            "  }";
 
 }

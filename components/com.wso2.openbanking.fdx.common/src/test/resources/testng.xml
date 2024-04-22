@@ -16,7 +16,7 @@
 <suite name="identity-base-test-suite">
     <test name="fdx-common-test-all">
         <classes>
-            <class name="com.wso2.openbanking.fdx.common.tests.Test1"/>
+            <class name="com.wso2.openbanking.fdx.common.config.OpenBankingFDXConfigParserTest"/>
         </classes>
     </test>
 </suite>

@@ -16,13 +16,13 @@ public class FDXRegistrationUtils {
      * If the metadata list contains JSON strings, this method identifies them and converts
      * them to JSON objects.
      *
-     * @param metaDataList The list of metadata objects which may contain JSON strings.
+     * @param spMetaData The list of metadata objects which may contain JSON strings.
      */
-    public static void getJsonElementListFromString(List<Object> metaDataList) {
-        for (Object element : metaDataList) {
+    public static void getJsonObjectsFromJsonStrings(List<Object> spMetaData) {
+        for (Object element : spMetaData) {
             if (element instanceof String) {
                 if (((String) element).contains("{")) {
-                    metaDataList.set(metaDataList.indexOf(element),
+                    spMetaData.set(spMetaData.indexOf(element),
                             new JsonParser().parse(element.toString()).getAsJsonObject());
                 }
             }
