@@ -118,14 +118,14 @@ public class OpenBankingFDXConfigParser {
             readChildElements(rootElement, nameStack);
         } catch (IOException | XMLStreamException | OMException e) {
             throw new OpenBankingRuntimeException("Error occurred while building configuration from " +
-                    "open-banking-cds.xml", e);
+                    "open-banking-fdx.xml", e);
         } finally {
             try {
                 if (inStream != null) {
                     inStream.close();
                 }
             } catch (IOException e) {
-                log.error("Error closing the input stream for open-banking-cds.xml", e);
+                log.error("Error closing the input stream for open-banking-fdx.xml", e);
             }
         }
     }
@@ -191,7 +191,7 @@ public class OpenBankingFDXConfigParser {
     private boolean elementHasText(OMElement element) {
 
         String text = element.getText();
-        return text != null && text.trim().length() != 0;
+        return text != null && !text.trim().isEmpty();
     }
 
     /**

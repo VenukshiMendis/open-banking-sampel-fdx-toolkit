@@ -1,9 +1,12 @@
 package com.wso2.openbanking.fdx.identity.dcr;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import com.wso2.openbanking.accelerator.common.constant.OpenBankingConstants;
 import com.wso2.openbanking.accelerator.common.util.JWTUtils;
+import com.wso2.openbanking.accelerator.common.util.OpenBankingUtils;
 import com.wso2.openbanking.accelerator.identity.dcr.exception.DCRValidationException;
 import com.wso2.openbanking.accelerator.identity.dcr.model.RegistrationRequest;
 import com.wso2.openbanking.accelerator.identity.dcr.utils.ValidatorUtils;
@@ -16,16 +19,15 @@ import com.wso2.openbanking.fdx.identity.dcr.model.FDXRegistrationRequest;
 import com.wso2.openbanking.fdx.identity.dcr.model.FDXSoftwareStatementBody;
 import com.wso2.openbanking.fdx.identity.dcr.model.RegistryReference;
 import com.wso2.openbanking.fdx.identity.dcr.util.RegistrationTestConstants;
+import com.wso2.openbanking.fdx.identity.dcr.utils.FDXRegistrationUtils;
 import com.wso2.openbanking.fdx.identity.dcr.utils.FDXValidatorUtils;
 import com.wso2.openbanking.fdx.identity.dcr.validation.FDXRegistrationValidatorImpl;
+import com.wso2.openbanking.fdx.identity.testutils.IdentityTestDataProvider;
 
-//import net.minidev.json.JSONObject;
+import net.minidev.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-//import org.mockito.Mockito;
-//import org.powermock.api.mockito.PowerMockito;
 
 import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -34,7 +36,6 @@ import org.testng.Assert;
 import org.testng.IObjectFactory;
 
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.ObjectFactory;
 import org.testng.annotations.Test;
 
@@ -42,7 +43,6 @@ import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +55,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
  * Test Class for FDX DCR Validation class.
  */
 
-@PrepareForTest({OpenBankingFDXConfigParser.class, ValidatorUtils.class})
+@PrepareForTest({OpenBankingFDXConfigParser.class, ValidatorUtils.class, JWTUtils.class, OpenBankingUtils.class})
 @PowerMockIgnore({"javax.net.ssl.*", "jdk.internal.reflect.*"})
 public class FDXDCRValidationTest {
 
@@ -102,20 +102,9 @@ public class FDXDCRValidationTest {
 
     }
 
-//    @AfterMethod
-//    public void tearDown(ITestResult result) {
-//        // Remove any configuration changes made during the test
-//        if (result.getMethod().getMethodName().equals("testInvalidLookbackPeriod")) {
-//            fdxConfigMap.remove("DCR.MaximumLookbackPeriod");
-//        } else if (result.getMethod().getMethodName().equals("testInvalidDurationPeriod")) {
-//            fdxConfigMap.remove("DCR.MaximumDurationPeriod");
-//        }
-//
-//    }
-
     //Test for mandatory parameter: client name
-    @Test
-    public void testClientNameExists() {
+    @Test(dataProvider = "nullAndEmpty", dataProviderClass = IdentityTestDataProvider.class)
+    public void testClientNameExists(String clientName) {
         String decodedSSA = null;
         try {
             decodedSSA = JWTUtils
@@ -129,8 +118,7 @@ public class FDXDCRValidationTest {
                 getFDXRegistrationRequestObject(RegistrationTestConstants.registrationRequestJson);
         fdxRegistrationRequest.setSoftwareStatementBody(registrationRequest.getSoftwareStatementBody());
 
-        // Set client name to null
-        fdxRegistrationRequest.setClientName(null);
+        fdxRegistrationRequest.setClientName(clientName);
         try {
             FDXValidatorUtils.validateRequest(fdxRegistrationRequest);
         } catch (DCRValidationException e) {
@@ -138,19 +126,11 @@ public class FDXDCRValidationTest {
                     contains("Required parameter Client Name cannot be null or empty"));
         }
 
-        //set client name empty
-        fdxRegistrationRequest.setClientName("");
-        try {
-            FDXValidatorUtils.validateRequest(fdxRegistrationRequest);
-        } catch (DCRValidationException e) {
-            Assert.assertTrue(e.getErrorDescription().
-                    contains("Required parameter Client Name cannot be null or empty"));
-        }
     }
 
     //Test for mandatory parameter: redirect uris
-    @Test
-    public void testRedirectURIsExist() {
+    @Test(dataProvider = "nullAndEmptyArray", dataProviderClass = IdentityTestDataProvider.class)
+    public void testRedirectURIsExist(List<String> redirectUris) {
         String decodedSSA = null;
         try {
             decodedSSA = JWTUtils
@@ -164,17 +144,7 @@ public class FDXDCRValidationTest {
                 getFDXRegistrationRequestObject(RegistrationTestConstants.registrationRequestJson);
         fdxRegistrationRequest.setSoftwareStatementBody(registrationRequest.getSoftwareStatementBody());
 
-        // Set redirect uris to null
-        fdxRegistrationRequest.setCallbackUris(null);
-        try {
-            FDXValidatorUtils.validateRequest(fdxRegistrationRequest);
-        } catch (DCRValidationException e) {
-            Assert.assertTrue(e.getErrorDescription().
-                    contains("Required parameter Redirect URIs can not be null or empty"));
-        }
-
-        //set redirect uris empty
-        fdxRegistrationRequest.setCallbackUris(new ArrayList<>());
+        fdxRegistrationRequest.setCallbackUris(redirectUris);
         try {
             FDXValidatorUtils.validateRequest(fdxRegistrationRequest);
         } catch (DCRValidationException e) {
@@ -183,7 +153,7 @@ public class FDXDCRValidationTest {
         }
     }
 
-    @Test(dataProvider = "testDataNullAndEmpty")
+    @Test(dataProvider = "nullAndEmpty", dataProviderClass = IdentityTestDataProvider.class)
     public void testInvalidRegisteredEntityName(String registeredEntityName) {
         mockStatic(OpenBankingFDXConfigParser.class);
         openBankingFDXConfigParser = mock(OpenBankingFDXConfigParser.class);
@@ -224,7 +194,7 @@ public class FDXDCRValidationTest {
 
     }
 
-    @Test(dataProvider = "testDataNullAndEmpty")
+    @Test(dataProvider = "nullAndEmpty", dataProviderClass = IdentityTestDataProvider.class)
     public void testInvalidRegisteredEntityId(String registeredEntityId) {
         mockStatic(OpenBankingFDXConfigParser.class);
         openBankingFDXConfigParser = mock(OpenBankingFDXConfigParser.class);
@@ -265,7 +235,7 @@ public class FDXDCRValidationTest {
 
     }
 
-    @Test(dataProvider = "testDataNullAndEmpty")
+    @Test(dataProvider = "nullAndEmpty", dataProviderClass = IdentityTestDataProvider.class)
     public void testInvalidRegistry(String registry) {
         mockStatic(OpenBankingFDXConfigParser.class);
         openBankingFDXConfigParser = mock(OpenBankingFDXConfigParser.class);
@@ -584,7 +554,7 @@ public class FDXDCRValidationTest {
 
     }
 
-    @Test(dataProvider = "grantTypes")
+    @Test(dataProvider = "grantTypes", dataProviderClass = IdentityTestDataProvider.class)
     public void testAddAllowedGrantTypes(List<String> grantTypes, List<String> expectedGrantTypes) {
         mockStatic(OpenBankingFDXConfigParser.class);
         openBankingFDXConfigParser = mock(OpenBankingFDXConfigParser.class);
@@ -608,7 +578,7 @@ public class FDXDCRValidationTest {
 
     }
 
-    @Test(dataProvider = "tokenEndpointAuthMethods")
+    @Test(dataProvider = "tokenEndpointAuthMethods", dataProviderClass = IdentityTestDataProvider.class)
     public void testAddAllowedTokenEndpointAuthMethod(String authMethod, String expectedAuthMethod) {
         mockStatic(OpenBankingFDXConfigParser.class);
         openBankingFDXConfigParser = mock(OpenBankingFDXConfigParser.class);
@@ -631,15 +601,16 @@ public class FDXDCRValidationTest {
     }
 
     @Test
-    public void testRegistrationResponse() {
+    public void testResponseWithAddedAccessTokenAndClientUri() {
         String clientId = "AAAAAA";
         String tlsCert = "BBBBBB";
         String accessToken = "CCCCC";
-        String clientUri ="https://localhost:8243/fdxv6.0.0recipientapi/6.0.0/register/";
-        Map<String, Object> spMetadata = new HashMap<>();
+        String clientUri = "https://localhost:8243/fdxv6.0.0recipientapi/6.0.0/register/";
 
-        spMetadata.put("client_id", clientId );
+        Map<String, Object> spMetadata = new HashMap<>();
+        spMetadata.put("client_id", clientId);
         spMetadata.put("tls_cert", tlsCert);
+
         mockStatic(ValidatorUtils.class);
         when(ValidatorUtils.generateAccessToken(Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(accessToken);
@@ -656,44 +627,64 @@ public class FDXDCRValidationTest {
     }
 
 
+    @Test
+    public void testValidatePost() throws Exception {
+        mockStatic(OpenBankingFDXConfigParser.class);
+        openBankingFDXConfigParser = mock(OpenBankingFDXConfigParser.class);
+        when(OpenBankingFDXConfigParser.getInstance()).thenReturn(openBankingFDXConfigParser);
+        when(openBankingFDXConfigParser.getConfiguration()).thenReturn(fdxConfigMap);
 
-//    @Test
-//    public void testIsValidRequest() throws Exception {
-//        registrationRequest = getRegistrationRequestObject(RegistrationTestConstants.registrationRequestJson);
-//
-//        String decodedSSA = null;
-//        try {
-//            decodedSSA = JWTUtils
-//                    .decodeRequestJWT(registrationRequest.getSoftwareStatement(), "body").toJSONString();
-//        } catch (ParseException e) {
-//            log.error("Error while parsing the SSA", e);
-//        }
-//        PowerMockito.mockStatic(OpenBankingFDXConfigParser.class);
-//        openBankingFDXConfigParser = mock(OpenBankingFDXConfigParser.class);
-//        when(OpenBankingFDXConfigParser.getInstance()).thenReturn(openBankingFDXConfigParser);
-//        when(openBankingFDXConfigParser.getConfiguration()).thenReturn(fdxConfigMap);
-//
-//        JSONObject obj = JWSObject.parse(registrationRequest.getSoftwareStatement()).getPayload().toJSONObject();
-//        PowerMockito.mockStatic(JWTUtils.class);
-//        when(JWTUtils.validateJWTSignature(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
-//                .thenReturn(true);
-//        when(JWTUtils.decodeRequestJWT(Mockito.anyString(), Mockito.anyString()))
-//                .thenReturn(obj);
-//
-//
-//
-//        registrationValidator.setSoftwareStatementPayload(registrationRequest, decodedSSA);
-//        FDXRegistrationRequest fdxRegistrationRequest =
-//                getFDXRegistrationRequestObject(RegistrationTestConstants.registrationRequestJson);
-//        fdxRegistrationRequest.setSoftwareStatementBody(registrationRequest.getSoftwareStatementBody());
-//
-//        try {
-//            FDXValidatorUtils.validateRequest(fdxRegistrationRequest);
-//        } catch (DCRValidationException e) {
-//            Assert.fail("Exception was thrown" + e);
-//        }
-//
-//    }
+        registrationRequest = getRegistrationRequestObject(RegistrationTestConstants.registrationRequestJson);
+
+        JSONObject ssaBody = null;
+        String decodedSSA = null;
+        try {
+            ssaBody = JWTUtils
+                    .decodeRequestJWT(registrationRequest.getSoftwareStatement(), "body");
+            decodedSSA = ssaBody.toString();
+        } catch (ParseException e) {
+            log.error("Error while parsing the SSA", e);
+        }
+
+        mockStatic(JWTUtils.class);
+        when(JWTUtils.validateJWTSignature(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(true);
+        when(JWTUtils.decodeRequestJWT(Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(ssaBody);
+
+        mockStatic(OpenBankingUtils.class);
+        when(OpenBankingUtils.getSoftwareEnvironmentFromSSA(Mockito.anyString())).thenReturn("SANDBOX");
+
+        registrationValidator.setSoftwareStatementPayload(registrationRequest, decodedSSA);
+
+        // set request parameters
+        Type type = new com.google.gson.reflect.TypeToken<Map<String, Object>>() { }.getType();
+        Map<String, Object> requestParameters = gson.fromJson(RegistrationTestConstants.registrationRequestJson, type);
+        registrationRequest.setRequestParameters(requestParameters);
+
+        //set SSA parameters
+        Map<String, Object> ssaParameters = gson.fromJson(decodedSSA, type);
+        registrationRequest.setSsaParameters(ssaParameters);
+
+        try {
+            registrationValidator.validatePost(registrationRequest);
+        } catch (DCRValidationException e) {
+            Assert.fail("Exception was thrown" + e);
+        }
+
+    }
+
+    @Test
+    public void testGetJsonObjectsFromJsonStrings() {
+        List<Object> spMetaData = new ArrayList<>();
+        spMetaData.add(RegistrationTestConstants.registryReference);
+
+        JsonObject registryReferenceJson = new JsonParser().parse(RegistrationTestConstants.registryReference)
+                                                                    .getAsJsonObject();
+        FDXRegistrationUtils.getJsonObjectsFromJsonStrings(spMetaData);
+
+        Assert.assertEquals(registryReferenceJson, spMetaData.get(0));
+    }
 
 
     private static RegistrationRequest getRegistrationRequestObject(String request) {
@@ -737,43 +728,5 @@ public class FDXDCRValidationTest {
         return new org.powermock.modules.testng.PowerMockObjectFactory();
     }
 
-    @DataProvider(name = "testDataNullAndEmpty")
-    public Object[][] nullAndEmptyTestDataProvider() {
-        return new Object[][] {
-                { null },
-                { "" }
 
-        };
-    }
-
-    @DataProvider(name = "grantTypes")
-    public Object[][] grantTypesTestDataProvider() {
-        List<String> defaultGrantTypes = Arrays.asList("authorization_code", "refresh_token");
-        List<String> authCodeGrantType = Collections.singletonList("authorization_code");
-        List<String> refreshTokenGrantType = Collections.singletonList("refresh_token");
-        return new Object[][] {
-                { null, defaultGrantTypes},
-                {Collections.emptyList(), defaultGrantTypes},
-                { Arrays.asList("authorization_code", "refresh_token"), defaultGrantTypes },
-                {Collections.singletonList("authorization_code"), authCodeGrantType},
-                {Collections.singletonList("refresh_token"), refreshTokenGrantType},
-                {Collections.singletonList("client_credentials"), defaultGrantTypes}
-
-
-        };
-    }
-
-    @DataProvider(name = "tokenEndpointAuthMethods")
-    public Object[][] tokenEndpointAuthMethodsTestDataProvider() {
-        String privateKeyJwt = "private_key_jwt";
-        String tlsClientAUth = "tls_client_auth";
-        return new Object[][] {
-                { null, privateKeyJwt},
-                {"", privateKeyJwt},
-                {"private_key_jwt", privateKeyJwt},
-                {"tls_client_auth", tlsClientAUth},
-                {"sample_auth_method", privateKeyJwt}
-
-        };
-    }
 }
