@@ -42,8 +42,8 @@ public class FDXValidatorUtils {
 
 
     public static void validateRequest(FDXRegistrationRequest  fdxRegistrationRequest) throws DCRValidationException {
-        List<RegistryReference>  registryReferences = fdxRegistrationRequest.getRegistryReferences();
 
+        List<RegistryReference>  registryReferences = fdxRegistrationRequest.getRegistryReferences();
         //do registry reference validations
         if (registryReferences != null) {
             for (RegistryReference registryReference : registryReferences) {

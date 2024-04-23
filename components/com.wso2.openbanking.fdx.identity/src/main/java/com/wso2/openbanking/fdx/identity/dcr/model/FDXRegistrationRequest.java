@@ -38,16 +38,15 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 
 /**
  * Model class for FDX dcr registration request.
  */
 
-@ValidateMaximumPeriod(durationPeriodProperty = "durationPeriod",
-        lookbackPeriodProperty = "lookbackPeriod", message = "Invalid duration period or lookback period:" +
-        DCRCommonConstants.INVALID_META_DATA, groups = AttributeChecks.class)
-@ValidateDurationPeriod(durationPeriodProperty = "durationPeriod",
-        durationTypeProperty = "durationType", message = "Duration period is required for time_bound duration type:" +
+@ValidateMaximumPeriod(message = "Invalid duration period or lookback period:" + DCRCommonConstants.INVALID_META_DATA,
+        groups = AttributeChecks.class)
+@ValidateDurationPeriod(message = "Duration period is required for time_bound duration type:" +
         DCRCommonConstants.INVALID_META_DATA, groups = AttributeChecks.class)
 @ValidateFDXParametersMatch(message = "Provided request parameters do not match with the SSA:" +
         DCRCommonConstants.INVALID_META_DATA, groups = AttributeChecks.class)
@@ -121,10 +120,13 @@ public class FDXRegistrationRequest extends RegistrationRequest {
         return durationType;
     }
 
+
     public void setDurationType(List<String> durationType) {
         this.durationType = durationType;
     }
 
+    @Positive(message = "Duration Period cannot be zero or negative:" +
+            DCRCommonConstants.INVALID_META_DATA, groups = AttributeChecks.class)
     public Integer getDurationPeriod() {
         return durationPeriod;
     }
@@ -133,6 +135,8 @@ public class FDXRegistrationRequest extends RegistrationRequest {
         this.durationPeriod = durationPeriod;
     }
 
+    @Positive(message = "Lookback Period cannot be zero or negative:" +
+            DCRCommonConstants.INVALID_META_DATA, groups = AttributeChecks.class)
     public Integer getLookbackPeriod() {
         return lookbackPeriod;
     }

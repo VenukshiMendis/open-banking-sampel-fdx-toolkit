@@ -416,6 +416,45 @@ public class FDXDCRValidationTest {
         }
     }
 
+    @Test(dataProvider = "zeroAndNegative", dataProviderClass = IdentityTestDataProvider.class)
+    public void testZeroOrNegativeDurationPeriod(Integer durationPeriod) {
+        mockStatic(OpenBankingFDXConfigParser.class);
+        openBankingFDXConfigParser = mock(OpenBankingFDXConfigParser.class);
+        when(OpenBankingFDXConfigParser.getInstance()).thenReturn(openBankingFDXConfigParser);
+        when(openBankingFDXConfigParser.getConfiguration()).thenReturn(fdxConfigMap);
+
+        registrationRequest = getRegistrationRequestObject(RegistrationTestConstants.registrationRequestJson);
+        String decodedSSA = null;
+        try {
+            decodedSSA = JWTUtils
+                    .decodeRequestJWT(registrationRequest.getSoftwareStatement(), "body").toJSONString();
+        } catch (ParseException e) {
+            log.error("Error while parsing the SSA", e);
+        }
+
+        registrationValidator.setSoftwareStatementPayload(registrationRequest, decodedSSA);
+        FDXRegistrationRequest fdxRegistrationRequest =
+                getFDXRegistrationRequestObject(RegistrationTestConstants.registrationRequestJson);
+        fdxRegistrationRequest.setSoftwareStatementBody(registrationRequest.getSoftwareStatementBody());
+
+        fdxRegistrationRequest.setDurationPeriod(durationPeriod);
+
+        //Request parameters need to be matched with SSA parameters
+        FDXSoftwareStatementBody ssaBody =
+                (FDXSoftwareStatementBody) fdxRegistrationRequest.getSoftwareStatementBody();
+        ssaBody.setDurationPeriod(durationPeriod);
+        fdxRegistrationRequest.setSoftwareStatementBody(ssaBody);
+
+        try {
+            FDXValidatorUtils.validateRequest(fdxRegistrationRequest);
+        } catch (DCRValidationException e) {
+            Assert.assertTrue(e.getErrorDescription().contains("Duration Period cannot be zero or negative"));
+        } catch (Exception e) {
+            log.error(e);
+        }
+    }
+
+
     @Test
     public void testInvalidDurationPeriodForTimeBoundDurationType() {
         mockStatic(OpenBankingFDXConfigParser.class);

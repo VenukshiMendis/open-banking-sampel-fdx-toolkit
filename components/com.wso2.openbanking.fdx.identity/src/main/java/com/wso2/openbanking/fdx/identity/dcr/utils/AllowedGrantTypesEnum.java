@@ -27,7 +27,10 @@ import java.util.stream.Collectors;
  */
 public enum AllowedGrantTypesEnum {
     AUTHORIZATION_CODE("authorization_code"),
-    REFRESH_TOKEN("refresh_token");
+    REFRESH_TOKEN("refresh_token"),
+
+    //This needs to be removed when /register/token endpoint is introduced to obtain DCR access tokens
+    CLIENT_CREDENTIALS("client_credentials");
 
     private final String value;
 

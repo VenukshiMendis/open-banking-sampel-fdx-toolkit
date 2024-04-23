@@ -28,9 +28,5 @@ public @interface ValidateDurationPeriod {
 
     Class<? extends Payload>[] payload() default {};
 
-    String durationPeriodProperty() default "durationPeriodProperty";
-
-    String durationTypeProperty() default "durationTypeProperty";
-
 
 }

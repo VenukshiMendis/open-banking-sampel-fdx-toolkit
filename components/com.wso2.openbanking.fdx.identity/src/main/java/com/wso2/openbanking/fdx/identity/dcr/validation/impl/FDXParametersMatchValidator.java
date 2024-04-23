@@ -31,20 +31,19 @@ public class FDXParametersMatchValidator implements ConstraintValidator<Validate
         try {
             for (Field field : fdxRegistrationRequest.getClass().getDeclaredFields()) {
                 if (!field.isSynthetic()) {
-                    // Get the value of the field from the fdxRegistrationRequest object
+
                     field.setAccessible(true);
+                    // Get the value of the field from the fdxRegistrationRequest object
                     Object requestValue = field.get(fdxRegistrationRequest);
 
                     // Get the same field from fdxSoftwareStatement using field name
-
                     Field ssaField = FieldUtils.getField(fdxSoftwareStatementBody.getClass(), field.getName(), true);
-
 
                     ssaField.setAccessible(true);
                     Object ssaValue = ssaField.get(fdxSoftwareStatementBody);
 
                     // compare SSA field value with the value in registration request
-                    if (!requestValue.equals(ssaValue)) {
+                    if (requestValue != null && ssaValue != null && !requestValue.equals(ssaValue)) {
                         SerializedName annotation = field.getAnnotation(SerializedName.class);
                         constraintValidatorContext.disableDefaultConstraintViolation();
                         constraintValidatorContext

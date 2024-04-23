@@ -38,7 +38,7 @@ public class FDXDCRExecutor extends DCRExecutor {
         if (obapiRequestContext.getMsgInfo().getHeaders().containsKey(INTERACTION_ID_HEADER)) {
             String interactionId = obapiRequestContext.getMsgInfo().getHeaders().get(INTERACTION_ID_HEADER);
             try {
-                //Parse the interactionId as a UUID to validate of it's in the UUID format
+                //Parse the interactionId as a UUID to validate if it's in the UUID format
                 UUID uuid = UUID.fromString(interactionId);
                 addedHeaders.put(INTERACTION_ID_HEADER, uuid.toString());
             } catch (IllegalArgumentException e) {
@@ -47,7 +47,7 @@ public class FDXDCRExecutor extends DCRExecutor {
             }
 
         } else {
-            handleBadRequestError(obapiRequestContext, "Mandatory header x-fapi-interaction-id not provided");
+            handleBadRequestError(obapiRequestContext, "Mandatory header x-fapi-interaction-id is not provided");
         }
 
         super.preProcessRequest(obapiRequestContext);

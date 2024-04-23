@@ -50,6 +50,14 @@ public class FDXRegistrationValidatorImpl extends RegistrationValidator {
     private static final Gson gson = new Gson();
     @Override
     public void validatePost(RegistrationRequest registrationRequest) throws DCRValidationException {
+        // convert requestParameters in the registrationRequest to a fdxRegistrationRequest
+        Map<String, Object> requestParameters = registrationRequest.getRequestParameters();
+        JsonElement jsonElement = gson.toJsonTree(requestParameters);
+        FDXRegistrationRequest fdxRegistrationRequest = gson.fromJson(jsonElement, FDXRegistrationRequest.class);
+        fdxRegistrationRequest.setSoftwareStatementBody(registrationRequest.getSoftwareStatementBody());
+
+        FDXValidatorUtils.validateRequest(fdxRegistrationRequest);
+
         // add grant types and an authentication method to the registration request
         FDXValidatorUtils.addAllowedGrantTypes(registrationRequest);
         FDXValidatorUtils.addAllowedTokenEndpointAuthMethod(registrationRequest);
@@ -60,13 +68,6 @@ public class FDXRegistrationValidatorImpl extends RegistrationValidator {
         FDXRegistrationUtils.convertDoubleValueToInt(registrationRequest.getSsaParameters(),
                 CommonConstants.LOOKBACK_PERIOD);
 
-        // convert requestParameters in the registrationRequest to a fdxRegistrationRequest
-        Map<String, Object> requestParameters = registrationRequest.getRequestParameters();
-        JsonElement jsonElement = gson.toJsonTree(requestParameters);
-        FDXRegistrationRequest fdxRegistrationRequest = gson.fromJson(jsonElement, FDXRegistrationRequest.class);
-        fdxRegistrationRequest.setSoftwareStatementBody(registrationRequest.getSoftwareStatementBody());
-
-        FDXValidatorUtils.validateRequest(fdxRegistrationRequest);
 
     }
 
@@ -82,6 +83,23 @@ public class FDXRegistrationValidatorImpl extends RegistrationValidator {
 
     @Override
     public void validateUpdate(RegistrationRequest registrationRequest) throws DCRValidationException {
+        // convert requestParameters in the registrationRequest to a fdxRegistrationRequest
+        Map<String, Object> requestParameters = registrationRequest.getRequestParameters();
+        JsonElement jsonElement = gson.toJsonTree(requestParameters);
+        FDXRegistrationRequest fdxRegistrationRequest = gson.fromJson(jsonElement, FDXRegistrationRequest.class);
+        fdxRegistrationRequest.setSoftwareStatementBody(registrationRequest.getSoftwareStatementBody());
+
+        FDXValidatorUtils.validateRequest(fdxRegistrationRequest);
+
+        // add grant types and an authentication method to the registration request
+        FDXValidatorUtils.addAllowedGrantTypes(registrationRequest);
+        FDXValidatorUtils.addAllowedTokenEndpointAuthMethod(registrationRequest);
+
+        //convert duration_period and lookback_period values to integers
+        FDXRegistrationUtils.convertDoubleValueToInt(registrationRequest.getSsaParameters(),
+                CommonConstants.DURATION_PERIOD);
+        FDXRegistrationUtils.convertDoubleValueToInt(registrationRequest.getSsaParameters(),
+                CommonConstants.LOOKBACK_PERIOD);
 
     }
 
@@ -91,6 +109,7 @@ public class FDXRegistrationValidatorImpl extends RegistrationValidator {
         FDXSoftwareStatementBody fdxSoftwareStatementBody =  new GsonBuilder().create()
                 .fromJson(decodedSSA, FDXSoftwareStatementBody.class);
         registrationRequest.setSoftwareStatementBody(fdxSoftwareStatementBody);
+
 
     }
 

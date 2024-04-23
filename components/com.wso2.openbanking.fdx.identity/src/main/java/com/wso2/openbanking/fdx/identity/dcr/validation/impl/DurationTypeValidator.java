@@ -34,12 +34,12 @@ public class DurationTypeValidator implements ConstraintValidator<ValidateDurati
 
         if (durationTypes instanceof List) {
             List<?> requestedDurationTypes = (List<?>) durationTypes;
-            List<String> fDXDurationTypes = FDXDurationTypesEnum.getAllDurationTypes();
+            List<String> allowedDurationTypes = FDXDurationTypesEnum.getAllDurationTypes();
 
             for (Object durationTypeObj: requestedDurationTypes) {
                 if (durationTypeObj instanceof String) {
                     String durationType = (String) durationTypeObj;
-                    if (!fDXDurationTypes.contains(durationType)) {
+                    if (!allowedDurationTypes.contains(durationType)) {
                        return false;
                     }
                 } else {

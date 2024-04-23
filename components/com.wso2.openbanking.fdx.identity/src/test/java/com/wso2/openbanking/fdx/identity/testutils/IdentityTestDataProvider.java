@@ -38,6 +38,14 @@ public class IdentityTestDataProvider {
         };
     }
 
+    @DataProvider(name = "zeroAndNegative")
+    public Object[][] zeroAndNegativeTestDataProvider() {
+        return new Object[][] {
+                { 0 },
+                { -100 }
+        };
+    }
+
     @DataProvider(name = "nullAndEmptyArray")
     public Object[][] nullAndEmptyArrayTestDataProvider() {
         return new Object[][] {
@@ -48,23 +56,31 @@ public class IdentityTestDataProvider {
 
     @DataProvider(name = "grantTypes")
     public Object[][] grantTypesTestDataProvider() {
+
+        //this needs to be removed when /register/token endpoint is introduced to obtain DCR access tokens
+        List<String> defaultGrantTypesTemp = Arrays.asList("authorization_code", "refresh_token", "client_credentials");
+
         List<String> defaultGrantTypes = Arrays.asList("authorization_code", "refresh_token");
         List<String> authCodeGrantType = Collections.singletonList("authorization_code");
         List<String> refreshTokenGrantType = Collections.singletonList("refresh_token");
+
         return new Object[][] {
-                { null, defaultGrantTypes},
-                {Collections.emptyList(), defaultGrantTypes},
+                { null, defaultGrantTypesTemp},
+                {Collections.emptyList(), defaultGrantTypesTemp},
+                {Collections.singletonList("auth_code"), defaultGrantTypesTemp},
                 { Arrays.asList("authorization_code", "refresh_token"), defaultGrantTypes },
                 {Collections.singletonList("authorization_code"), authCodeGrantType},
-                {Collections.singletonList("refresh_token"), refreshTokenGrantType},
-                {Collections.singletonList("client_credentials"), defaultGrantTypes}
+                {Collections.singletonList("refresh_token"), refreshTokenGrantType}
+
         };
     }
 
     @DataProvider(name = "tokenEndpointAuthMethods")
     public Object[][] tokenEndpointAuthMethodsTestDataProvider() {
+
         String privateKeyJwt = "private_key_jwt";
         String tlsClientAUth = "tls_client_auth";
+
         return new Object[][] {
                 { null, privateKeyJwt},
                 {"", privateKeyJwt},

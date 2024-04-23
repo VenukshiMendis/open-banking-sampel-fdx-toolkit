@@ -20,12 +20,11 @@ package com.wso2.openbanking.fdx.identity.dcr.validation.impl;
 import com.wso2.openbanking.accelerator.identity.dcr.validation.DCRCommonConstants;
 import com.wso2.openbanking.fdx.common.config.OpenBankingFDXConfigParser;
 import com.wso2.openbanking.fdx.identity.dcr.constants.FDXValidationConstants;
+import com.wso2.openbanking.fdx.identity.dcr.model.FDXRegistrationRequest;
 import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateMaximumPeriod;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import javax.validation.ConstraintValidator;
@@ -41,64 +40,38 @@ public class MaximumPeriodValidator implements ConstraintValidator<ValidateMaxim
 
     private static final Log log = LogFactory.getLog(MaximumPeriodValidator.class);
 
-    private String durationPeriodPath;
-    private String lookbackPeriodPath;
-
     @Override
-    public void initialize(ValidateMaximumPeriod validateMaximumPeriod) {
-        this.durationPeriodPath = validateMaximumPeriod.durationPeriodProperty();
-        this.lookbackPeriodPath = validateMaximumPeriod.lookbackPeriodProperty();
+    public boolean isValid(Object fdxRegistrationRequestObj, ConstraintValidatorContext constraintValidatorContext) {
+        FDXRegistrationRequest fdxRegistrationRequest = (FDXRegistrationRequest) fdxRegistrationRequestObj;
+        //get duration period and lookback period from registration request
+        Integer durationPeriod = fdxRegistrationRequest.getDurationPeriod();
+        Integer lookbackPeriod = fdxRegistrationRequest.getLookbackPeriod();
 
+        Map<String, Object> configurationsMap = OpenBankingFDXConfigParser.getInstance().getConfiguration();
+        //get maximum duration period and maximum lookback period from configs
+        String maximumDurationPeriodStr = (String) configurationsMap.get(
+                FDXValidationConstants.DCR_MAXIMUM_DURATION_PERIOD);
+        String maximumLookbackPeriodStr = (String) configurationsMap.get(
+                FDXValidationConstants.DCR_MAXIMUM_LOOKBACK_PERIOD);
+
+        //validate duration period and look back period
+        return validatePeriod(durationPeriod, maximumDurationPeriodStr, "Duration period",
+                        constraintValidatorContext) &&
+               validatePeriod(lookbackPeriod, maximumLookbackPeriodStr, "Lookback period",
+                        constraintValidatorContext);
     }
 
-    @Override
-    public boolean isValid(Object fdxRegistrationRequest, ConstraintValidatorContext constraintValidatorContext) {
-        try {
-            Map<String, Object> configurationsMap = OpenBankingFDXConfigParser.getInstance().getConfiguration();
 
-            //get maximum duration period and maximum lookback period from configs
-            String maximumDurationPeriodStr = (String) configurationsMap.get(
-                    FDXValidationConstants.DCR_MAXIMUM_DURATION_PERIOD);
-            String maximumLookbackPeriodStr = (String) configurationsMap.get(
-                    FDXValidationConstants.DCR_MAXIMUM_LOOKBACK_PERIOD);
-
-            //get duration period and lookback period from registration request
-            String durationPeriodStr = BeanUtils.getProperty(fdxRegistrationRequest, durationPeriodPath);
-            String lookbackPeriodStr = BeanUtils.getProperty(fdxRegistrationRequest, lookbackPeriodPath);
-
-            //validate duration period
-            if (!validatePeriod(durationPeriodStr, maximumDurationPeriodStr, "Duration period" ,
-                    constraintValidatorContext)) {
-                return false;
-            }
-
-            //validate look back period
-            if (!validatePeriod (lookbackPeriodStr, maximumLookbackPeriodStr, "Lookback period",
-                    constraintValidatorContext)) {
-                return false;
-            }
-
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            log.error("Error while resolving validation fields", e);
-            return false;
-        }
-
-        return true;
-    }
-
-    //TODO : Change max period comparison to integers
-    private boolean validatePeriod(String periodStr, String maximumPeriodStr, String periodName,
+    private boolean validatePeriod(Integer requestedPeriod, String maximumPeriodStr, String attributeName,
                                    ConstraintValidatorContext context) {
        try {
-           //check whether maximum period value is provided as configs
-           if (periodStr != null && maximumPeriodStr != null) {
-               int period = Integer.parseInt(periodStr);
+           //check whether maximum requestedPeriod value is provided as configs
+           if (requestedPeriod != null && maximumPeriodStr != null && !maximumPeriodStr.isEmpty()) {
                int maximumPeriod = Integer.parseInt(maximumPeriodStr);
-               if (period > maximumPeriod) {
+               if (requestedPeriod > maximumPeriod) {
                    context.disableDefaultConstraintViolation();
-                   context.buildConstraintViolationWithTemplate(periodName + " should not exceed " +
-                                   maximumPeriod + " days :" + DCRCommonConstants.INVALID_META_DATA)
-                           .addConstraintViolation();
+                   context.buildConstraintViolationWithTemplate(attributeName + " should not exceed " + maximumPeriod
+                           + " days :" + DCRCommonConstants.INVALID_META_DATA).addConstraintViolation();
                    return false;
                }
            }

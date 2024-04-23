@@ -18,15 +18,10 @@
 
 package com.wso2.openbanking.fdx.identity.dcr.validation.impl;
 
+import com.wso2.openbanking.fdx.identity.dcr.model.FDXRegistrationRequest;
 import com.wso2.openbanking.fdx.identity.dcr.utils.FDXDurationTypesEnum;
 import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateDurationPeriod;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.List;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -36,36 +31,15 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class DurationPeriodValidator implements ConstraintValidator<ValidateDurationPeriod, Object> {
 
-    private static final Log log = LogFactory.getLog(DurationPeriodValidator.class);
-
-    private String durationPeriodPath;
-    private String durationTypePath;
-
     @Override
-    public void initialize(ValidateDurationPeriod validateDurationPeriod) {
-        this.durationPeriodPath = validateDurationPeriod.durationPeriodProperty();
-        this.durationTypePath = validateDurationPeriod.durationTypeProperty();
-    }
+    public boolean isValid(Object fdxRegistrationRequestObj, ConstraintValidatorContext constraintValidatorContext) {
 
-    @Override
-    public boolean isValid(Object fdxRegistrationRequest, ConstraintValidatorContext constraintValidatorContext) {
+        FDXRegistrationRequest fdxRegistrationRequest = (FDXRegistrationRequest) fdxRegistrationRequestObj;
+        Integer durationPeriod = fdxRegistrationRequest.getDurationPeriod();
+        List<String> durationTypes = fdxRegistrationRequest.getDurationType();
 
-        try {
-            String durationPeriodStr = BeanUtils.getProperty(fdxRegistrationRequest, durationPeriodPath);
-            String[] durationTypesArray = BeanUtils.getArrayProperty(fdxRegistrationRequest, durationTypePath);
-
-            if (durationTypesArray != null) {
-                List<String> durationTypes = Arrays.asList(durationTypesArray);
-                if (durationTypes.contains(FDXDurationTypesEnum.TIME_BOUND.getValue())) {
-                    if (StringUtils.isBlank(durationPeriodStr)) {
-                        return false;
-                    }
-                }
-            }
-
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            log.error("Error while resolving validation fields", e);
-            return false;
+        if (durationTypes != null && durationTypes.contains(FDXDurationTypesEnum.TIME_BOUND.getValue())) {
+            return durationPeriod != null;
         }
 
         return true;
