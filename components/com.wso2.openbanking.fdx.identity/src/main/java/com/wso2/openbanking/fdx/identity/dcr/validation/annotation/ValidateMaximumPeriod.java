@@ -25,8 +25,5 @@ public @interface ValidateMaximumPeriod {
 
     Class<? extends Payload>[] payload() default {};
 
-    String durationPeriodProperty() default "durationPeriodProperty";
-
-    String lookbackPeriodProperty() default "lookbackPeriodProperty";
 
 }

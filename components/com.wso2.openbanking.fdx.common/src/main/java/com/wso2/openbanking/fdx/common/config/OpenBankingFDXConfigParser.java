@@ -140,6 +140,12 @@ public class OpenBankingFDXConfigParser {
         return configuration;
     }
 
+    public Object getConfiguration(String config) {
+
+        return configuration.get(config);
+    }
+
+
     /**
      * Method to read text configs from xml when root element is given.
      *

@@ -30,7 +30,10 @@ public class FDXValidationConstants {
     public static final String GRANT_TYPES = "grant_types";
     public static final String TOKEN_ENDPOINT_AUTH_METHOD = "token_endpoint_auth_method";
 
-    public static final String SOFTWARE_REDIRECT_URIS = "software_redirect_uris";
+    public static final String DURATION_PERIOD = "duration_period";
+
+    public static final String LOOKBACK_PERIOD = "lookback_period";
+
 
     // dcr config constants
     public static final String DCR_MAXIMUM_DURATION_PERIOD = "DCR.MaximumDurationPeriod";

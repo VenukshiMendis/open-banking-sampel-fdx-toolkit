@@ -21,6 +21,8 @@ package com.wso2.openbanking.fdx.identity.dcr.validation.impl;
 import com.wso2.openbanking.fdx.identity.dcr.constants.FDXValidationConstants;
 import com.wso2.openbanking.fdx.identity.dcr.utils.FDXScopesEnum;
 import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateScopes;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 import javax.validation.ConstraintValidator;
@@ -33,6 +35,7 @@ import javax.validation.ConstraintValidatorContext;
  */
 
 public class ScopesValidator implements ConstraintValidator<ValidateScopes, Object> {
+    private static final Log log = LogFactory.getLog(ScopesValidator.class);
     @Override
     public boolean isValid(Object scopes, ConstraintValidatorContext constraintValidatorContext) {
 
@@ -46,6 +49,7 @@ public class ScopesValidator implements ConstraintValidator<ValidateScopes, Obje
                 boolean isOfflineAccess = FDXValidationConstants.OFFLINE_ACCESS.equals(scope);
 
                 if (!(isFDXScope || isOpenID || isOfflineAccess)) {
+                    log.error(String.format("Invalid scope requested : %s", scope));
                     return false;
                 }
             }

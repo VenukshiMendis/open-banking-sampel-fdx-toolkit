@@ -42,13 +42,16 @@ public enum FDXScopesEnum {
     TAX;
 
 
-    //get a list of all FDX Scopes in string format
+    /**
+     * Retrieves a list of all FDX supported scopes.
+     * Each scope is represented  by its corresponding name.
+     *
+     * @return A list of string representations of all supported scopes.
+     */
     public static List<String> getAllFDXScopes() {
-        List<String> fdxScopes = Arrays.stream(FDXScopesEnum.values())
+        return Collections.unmodifiableList(Arrays.stream(FDXScopesEnum.values())
                 .map(Enum::name)
-                .collect(Collectors.toList());
-
-        return Collections.unmodifiableList(fdxScopes);
+                .collect(Collectors.toList()));
     }
 
 }

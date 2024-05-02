@@ -42,11 +42,16 @@ public enum FDXDurationTypesEnum {
         return value;
     }
 
-    public static List<String> getAllDurationTypes() {
-        List<String> fdxDurationTypes = Arrays.stream(FDXDurationTypesEnum.values())
-                .map(FDXDurationTypesEnum::getValue)
-                .collect(Collectors.toList());
 
-        return Collections.unmodifiableList(fdxDurationTypes);
+    /**
+     * Retrieves a list of all duration types.
+     * Each duration type is represented  by its corresponding string value.
+     *
+     * @return A list of string representations of all supported duration types.
+     */
+    public static List<String> getAllDurationTypes() {
+        return Collections.unmodifiableList(Arrays.stream(FDXDurationTypesEnum.values())
+                .map(FDXDurationTypesEnum::getValue)
+                .collect(Collectors.toList()));
     }
 }

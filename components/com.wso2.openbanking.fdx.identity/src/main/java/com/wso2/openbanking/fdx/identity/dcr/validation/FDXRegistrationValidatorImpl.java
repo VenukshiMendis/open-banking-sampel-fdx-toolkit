@@ -19,7 +19,6 @@
 package com.wso2.openbanking.fdx.identity.dcr.validation;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 
 import com.wso2.openbanking.accelerator.identity.dcr.exception.DCRValidationException;
@@ -28,10 +27,9 @@ import com.wso2.openbanking.accelerator.identity.dcr.utils.ValidatorUtils;
 import com.wso2.openbanking.accelerator.identity.dcr.validation.RegistrationValidator;
 import com.wso2.openbanking.accelerator.identity.util.IdentityCommonConstants;
 import com.wso2.openbanking.accelerator.identity.util.IdentityCommonUtil;
-import com.wso2.openbanking.fdx.common.utils.CommonConstants;
+import com.wso2.openbanking.fdx.identity.dcr.constants.FDXValidationConstants;
 import com.wso2.openbanking.fdx.identity.dcr.model.FDXRegistrationRequest;
 import com.wso2.openbanking.fdx.identity.dcr.model.FDXRegistrationResponse;
-import com.wso2.openbanking.fdx.identity.dcr.model.FDXSoftwareStatementBody;
 import com.wso2.openbanking.fdx.identity.dcr.utils.FDXRegistrationUtils;
 import com.wso2.openbanking.fdx.identity.dcr.utils.FDXValidatorUtils;
 
@@ -50,23 +48,25 @@ public class FDXRegistrationValidatorImpl extends RegistrationValidator {
     private static final Gson gson = new Gson();
     @Override
     public void validatePost(RegistrationRequest registrationRequest) throws DCRValidationException {
-        // add grant types and an authentication method to the registration request
-        FDXValidatorUtils.addAllowedGrantTypes(registrationRequest);
-        FDXValidatorUtils.addAllowedTokenEndpointAuthMethod(registrationRequest);
-
-        //convert duration_period and lookback_period values to integers
-        FDXRegistrationUtils.convertDoubleValueToInt(registrationRequest.getSsaParameters(),
-                CommonConstants.DURATION_PERIOD);
-        FDXRegistrationUtils.convertDoubleValueToInt(registrationRequest.getSsaParameters(),
-                CommonConstants.LOOKBACK_PERIOD);
-
         // convert requestParameters in the registrationRequest to a fdxRegistrationRequest
         Map<String, Object> requestParameters = registrationRequest.getRequestParameters();
         JsonElement jsonElement = gson.toJsonTree(requestParameters);
         FDXRegistrationRequest fdxRegistrationRequest = gson.fromJson(jsonElement, FDXRegistrationRequest.class);
         fdxRegistrationRequest.setSoftwareStatementBody(registrationRequest.getSoftwareStatementBody());
 
-        FDXValidatorUtils.validateRequest(fdxRegistrationRequest);
+        //do validations related to registration request
+        ValidatorUtils.getValidationViolations(fdxRegistrationRequest);
+
+        // add grant types and an authentication method to the registration request
+        FDXValidatorUtils.addAllowedGrantTypes(registrationRequest);
+        FDXValidatorUtils.addAllowedTokenEndpointAuthMethod(registrationRequest);
+
+        //convert duration_period and lookback_period values to integers
+        FDXRegistrationUtils.convertDoubleValueToInt(registrationRequest.getRequestParameters(),
+                FDXValidationConstants.DURATION_PERIOD);
+        FDXRegistrationUtils.convertDoubleValueToInt(registrationRequest.getRequestParameters(),
+                FDXValidationConstants.LOOKBACK_PERIOD);
+
 
     }
 
@@ -82,22 +82,36 @@ public class FDXRegistrationValidatorImpl extends RegistrationValidator {
 
     @Override
     public void validateUpdate(RegistrationRequest registrationRequest) throws DCRValidationException {
+        // convert requestParameters in the registrationRequest to a fdxRegistrationRequest
+        Map<String, Object> requestParameters = registrationRequest.getRequestParameters();
+        JsonElement jsonElement = gson.toJsonTree(requestParameters);
+        FDXRegistrationRequest fdxRegistrationRequest = gson.fromJson(jsonElement, FDXRegistrationRequest.class);
+
+        //do validations related to registration request
+        ValidatorUtils.getValidationViolations(fdxRegistrationRequest);
+
+
+        // add grant types and an authentication method to the registration request
+        FDXValidatorUtils.addAllowedGrantTypes(registrationRequest);
+        FDXValidatorUtils.addAllowedTokenEndpointAuthMethod(registrationRequest);
+
+        //convert duration_period and lookback_period values to integers
+        FDXRegistrationUtils.convertDoubleValueToInt(registrationRequest.getRequestParameters(),
+                FDXValidationConstants.DURATION_PERIOD);
+        FDXRegistrationUtils.convertDoubleValueToInt(registrationRequest.getRequestParameters(),
+                FDXValidationConstants.LOOKBACK_PERIOD);
 
     }
 
     @Override
     public void setSoftwareStatementPayload(RegistrationRequest registrationRequest, String decodedSSA) {
-        //assuming that FDX DCR Requests contain a software statement
-        FDXSoftwareStatementBody fdxSoftwareStatementBody =  new GsonBuilder().create()
-                .fromJson(decodedSSA, FDXSoftwareStatementBody.class);
-        registrationRequest.setSoftwareStatementBody(fdxSoftwareStatementBody);
 
     }
 
     @Override
     public String getRegistrationResponse(Map<String, Object> spMetaData) {
         for (Map.Entry<String, Object> entry : spMetaData.entrySet()) {
-            if (entry.getValue() instanceof ArrayList<?>) {
+            if (entry.getValue() instanceof ArrayList) {
                 ArrayList<Object> list = ((ArrayList<Object>) entry.getValue());
                 //Convert JSON strings within the ArrayList to JSON objects
                 FDXRegistrationUtils.getJsonObjectsFromJsonStrings(list);

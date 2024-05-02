@@ -27,7 +27,10 @@ import java.util.stream.Collectors;
  */
 public enum AllowedGrantTypesEnum {
     AUTHORIZATION_CODE("authorization_code"),
-    REFRESH_TOKEN("refresh_token");
+    REFRESH_TOKEN("refresh_token"),
+
+    //This needs to be removed when /register/token endpoint is introduced to obtain DCR access tokens
+    CLIENT_CREDENTIALS("client_credentials");
 
     private final String value;
 
@@ -39,12 +42,16 @@ public enum AllowedGrantTypesEnum {
         return value;
     }
 
+    /**
+     * Retrieves a list of all FDX supported grant types.
+     * Each grant type is represented  by its corresponding string value.
+     *
+     * @return A list of string representations of all supported grant types.
+     */
     public static List<String> getAllowedGrantTypes() {
-        List<String> allowedGrantTypes = Arrays.stream(AllowedGrantTypesEnum.values())
+        return Collections.unmodifiableList(Arrays.stream(AllowedGrantTypesEnum.values())
                 .map(AllowedGrantTypesEnum::getValue)
-                .collect(Collectors.toList());
-
-        return Collections.unmodifiableList(allowedGrantTypes);
+                .collect(Collectors.toList()));
     }
 
 }

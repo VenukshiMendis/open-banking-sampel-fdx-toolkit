@@ -339,19 +339,19 @@ retrieve_uma_permission_info_through_introspection = true
 
 [oauth.grant_type.refresh_token]
 enable=true
-grant_handler="handlers.type.grant.com.wso2.openbanking.fdx.identity.SampleOBRefreshGrantHandler"
+grant_handler="com.wso2.openbanking.identity.grant.type.handlers.SampleOBRefreshGrantHandler"
 
 [oauth.grant_type.authorization_code]
 enable=true
-grant_handler="handlers.type.grant.com.wso2.openbanking.fdx.identity.SampleOBAuthorizationCodeGrantHandler"
+grant_handler="com.wso2.openbanking.identity.grant.type.handlers.SampleOBAuthorizationCodeGrantHandler"
 
 [oauth.grant_type.password]
 enable=true
-grant_handler="handlers.type.grant.com.wso2.openbanking.fdx.identity.SampleOBPasswordGrantHandler"
+grant_handler="com.wso2.openbanking.identity.grant.type.handlers.SampleOBPasswordGrantHandler"
 
 [oauth.grant_type.client_credentials]
 enable=true
-grant_handler="handlers.type.grant.com.wso2.openbanking.fdx.identity.SampleOBClientCredentialsGrantHandler"
+grant_handler="com.wso2.openbanking.identity.grant.type.handlers.SampleOBClientCredentialsGrantHandler"
 
 [oauth.oidc.extensions]
 claim_callback_handler="com.wso2.openbanking.accelerator.identity.claims.OBDefaultOIDCClaimsCallbackHandler"
@@ -379,11 +379,13 @@ connection_verification_timeout=1
 
 #=======================dcr configs======================
 [open_banking.dcr]
-validator = "validation.dcr.com.wso2.openbanking.fdx.identity.FDXRegistrationValidatorImpl"
-jwks_url_sandbox = "https://keystore.openbankingtest.org.uk/0015800001HQQrZAAX/oQ4KoaavpOuoE7rvQsZEOV.jwks"
+validator = "com.wso2.openbanking.fdx.identity.dcr.validation.FDXRegistrationValidatorImpl"
+jwks_url_sandbox =  "https://keystore.openbankingtest.org.uk/0015800001HQQrZAAX/oQ4KoaavpOuoE7rvQsZEOV.jwks"
 jwks_url_production = "https://keystore.openbankingtest.org.uk/0015800001HQQrZAAX/oQ4KoaavpOuoE7rvQsZEOV.jwks"
-applicationupdater = "application.listener.com.wso2.openbanking.fdx.identity.SampleApplicationUpdaterImpl"
+applicationupdater = "com.wso2.openbanking.fdx.identity.listener.application.SampleApplicationUpdaterImpl"
+#include access token and client uri (optinal) in response
 append_registration_attributes_in_response = true
+registration_client_uri = "https://localhost:8243/fdxv6.0.0recipientapi/6.0.0/register/"
 use_softwareIdForAppName = true
 
 
@@ -401,7 +403,8 @@ required = true
 [open_banking.dcr.registration.token_endpoint_authentication]
 required = false
 
-
+[open_banking.dcr.registration.software_statement]
+required =  false
 
 
 #Signature algorithm types that are allowed
@@ -411,6 +414,10 @@ required = false
 #[open_banking.sca.primaryauth]
 #name = "IdentifierExecutor"
 #display = "ob-identifier-first"
+
+[open_banking.sca.primaryauth]
+name = "BasicAuthenticator"
+display = "basic"
 
 #[open_banking.sca.idp]
 #name = ""
@@ -428,7 +435,7 @@ required = false
 #allowed_values = ["web"]
 
 [open_banking.data_publishing]
-enable = true
+enable = false
 username="$ref{super_admin.username}@carbon.super"
 password="$ref{super_admin.password}"
 server_url = "{tcp://localhost:7612}"
@@ -551,9 +558,9 @@ consent_id_claim_name = "fdxConsentId"
 servlet_extension = "com.wso2.openbanking.consent.extensions.authservlet.OBSampleAuthServletImpl"
 
 [open_banking.identity.extensions]
-request_object_validator="validator.request.extensions.auth.com.wso2.openbanking.fdx.identity.SampleRequestObjectValidator"
+request_object_validator="com.wso2.openbanking.identity.auth.extensions.request.validator.SampleRequestObjectValidator"
 push_auth_request_validator="com.wso2.openbanking.accelerator.identity.push.auth.extension.request.validator.PushAuthRequestValidator"
-claim_provider="claims.com.wso2.openbanking.fdx.identity.OBSampleClaimProvider"
+claim_provider="com.wso2.openbanking.identity.claims.OBSampleClaimProvider"
 
 [open_banking.identity.application_information_webapp]
 sp_metadata_filter="com.wso2.openbanking.accelerator.identity.sp.metadata.extension.impl.DefaultSPMetadataFilter"
@@ -582,3 +589,12 @@ event_executor = "com.wso2.openbanking.accelerator.common.event.executor.Default
 
 [application_mgt]
 enable_role_validation = true
+
+
+#=======================configs related to open-banking-fdx.xml=====================
+
+[open_banking_fdx.dcr]
+maximum_duration_period = 200
+maximum_lookback_period = 356
+default_token_endpoint_auth_method = "tls_client_auth"
+

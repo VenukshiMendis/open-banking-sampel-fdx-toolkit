@@ -18,19 +18,16 @@
 
 package com.wso2.openbanking.fdx.identity.dcr.utils;
 
-import com.wso2.openbanking.accelerator.common.validator.OpenBankingValidator;
-import com.wso2.openbanking.accelerator.identity.dcr.exception.DCRValidationException;
 import com.wso2.openbanking.accelerator.identity.dcr.model.RegistrationRequest;
-import com.wso2.openbanking.accelerator.identity.dcr.utils.ValidatorUtils;
-import com.wso2.openbanking.accelerator.identity.dcr.validation.validationgroups.ValidationOrder;
 import com.wso2.openbanking.fdx.common.config.OpenBankingFDXConfigParser;
 import com.wso2.openbanking.fdx.identity.dcr.constants.FDXValidationConstants;
-import com.wso2.openbanking.fdx.identity.dcr.model.FDXRegistrationRequest;
-import com.wso2.openbanking.fdx.identity.dcr.model.RegistryReference;
+
 
 import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
+//import java.util.Optional;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -39,27 +36,6 @@ import java.util.stream.Collectors;
  * Util class for validation logic implementation.
  */
 public class FDXValidatorUtils {
-
-
-    public static void validateRequest(FDXRegistrationRequest  fdxRegistrationRequest) throws DCRValidationException {
-        List<RegistryReference>  registryReferences = fdxRegistrationRequest.getRegistryReferences();
-
-        //do registry reference validations
-        if (registryReferences != null) {
-            for (RegistryReference registryReference : registryReferences) {
-                String error = OpenBankingValidator.getInstance()
-                        .getFirstViolation(registryReference, ValidationOrder.class);
-                if (error != null) {
-                    String[] errors = error.split(":");
-                    throw new DCRValidationException(errors[1], errors[0]);
-                }
-            }
-        }
-
-        //do validations related to registration request
-        ValidatorUtils.getValidationViolations(fdxRegistrationRequest);
-
-    }
 
     /**
      * Adds allowed grant types to the registration request based on the requested grant types.
@@ -72,11 +48,11 @@ public class FDXValidatorUtils {
         List<String> requestedGrantTypes = registrationRequest.getGrantTypes();
         List<String> allowedGrantTypes = AllowedGrantTypesEnum.getAllowedGrantTypes();
 
-        // Determine the grant types to add based on the requested grant types
-        List<String> grantTypesToAdd = (requestedGrantTypes == null || requestedGrantTypes.isEmpty()) ?
-                allowedGrantTypes : requestedGrantTypes.stream()
-                                    .filter(allowedGrantTypes::contains)
-                                    .collect(Collectors.toList());
+        // If requested grant types are provided, filter and collect only those that are allowed;
+        // Otherwise, use the default allowed grant types.
+        List<String> grantTypesToAdd = Optional.ofNullable(requestedGrantTypes)
+                .map(types -> types.stream().filter(allowedGrantTypes::contains).collect(Collectors.toList()))
+                .orElse(allowedGrantTypes);
 
         // If none of the requested grant types are valid, set allowedGrantTypes as grant types to be added
         if (grantTypesToAdd.isEmpty()) {
@@ -98,17 +74,16 @@ public class FDXValidatorUtils {
     public static void addAllowedTokenEndpointAuthMethod(RegistrationRequest registrationRequest) {
         String requestedAuthMethod = registrationRequest.getTokenEndPointAuthentication();
         List<String> allowedAuthMethods = AllowedTokenEndPointAuthMethodsEnum.getAllowedAuthMethods();
-        String authMethodToAdd;
 
         if (StringUtils.isBlank(requestedAuthMethod) || !allowedAuthMethods.contains(requestedAuthMethod)) {
 
             // Retrieve the default token endpoint authentication method from the configuration
-            String tokenEndpointAuthMethodConfig = (String) OpenBankingFDXConfigParser.getInstance()
-                    .getConfiguration().get(FDXValidationConstants.DCR_DEFAULT_TOKEN_ENDPOINT_AUTH_METHOD);
+            String defaultTokenEndpointAuthMethod = (String) OpenBankingFDXConfigParser.getInstance()
+                    .getConfiguration(FDXValidationConstants.DCR_DEFAULT_TOKEN_ENDPOINT_AUTH_METHOD);
 
             // Determine the authentication method to add, based on whether the default auth method is allowed
-            authMethodToAdd = (allowedAuthMethods.contains(tokenEndpointAuthMethodConfig)) ?
-                tokenEndpointAuthMethodConfig : AllowedTokenEndPointAuthMethodsEnum.PRIVATE_KEY_JWT.getValue();
+            String authMethodToAdd = (allowedAuthMethods.contains(defaultTokenEndpointAuthMethod)) ?
+                    defaultTokenEndpointAuthMethod : AllowedTokenEndPointAuthMethodsEnum.PRIVATE_KEY_JWT.getValue();
 
             registrationRequest.setTokenEndPointAuthentication(authMethodToAdd);
             registrationRequest.getRequestParameters()

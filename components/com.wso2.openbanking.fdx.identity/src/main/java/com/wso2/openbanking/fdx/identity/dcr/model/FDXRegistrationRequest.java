@@ -26,32 +26,23 @@ import com.wso2.openbanking.accelerator.identity.dcr.validation.validationgroups
 
 import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateDurationPeriod;
 import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateDurationType;
-import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateFDXParametersMatch;
 import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateMaximumPeriod;
-import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateRedirectURIsMatch;
 import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateScopes;
-
-
-
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 
 /**
  * Model class for FDX dcr registration request.
  */
 
-@ValidateMaximumPeriod(durationPeriodProperty = "durationPeriod",
-        lookbackPeriodProperty = "lookbackPeriod", message = "Invalid duration period or lookback period:" +
-        DCRCommonConstants.INVALID_META_DATA, groups = AttributeChecks.class)
-@ValidateDurationPeriod(durationPeriodProperty = "durationPeriod",
-        durationTypeProperty = "durationType", message = "Duration period is required for time_bound duration type:" +
-        DCRCommonConstants.INVALID_META_DATA, groups = AttributeChecks.class)
-@ValidateFDXParametersMatch(message = "Provided request parameters do not match with the SSA:" +
-        DCRCommonConstants.INVALID_META_DATA, groups = AttributeChecks.class)
-@ValidateRedirectURIsMatch(message = "Provided redirect URIs do not match with the SSA:" +
+@ValidateMaximumPeriod(message = "Invalid duration period or lookback period:" + DCRCommonConstants.INVALID_META_DATA,
+        groups = AttributeChecks.class)
+@ValidateDurationPeriod(message = "Duration period is required for time_bound duration type:" +
         DCRCommonConstants.INVALID_META_DATA, groups = AttributeChecks.class)
 public class FDXRegistrationRequest extends RegistrationRequest {
     @SerializedName("client_name")
@@ -79,6 +70,7 @@ public class FDXRegistrationRequest extends RegistrationRequest {
     private Integer lookbackPeriod;
 
     @SerializedName("registry_references")
+    @Valid
     private List<RegistryReference> registryReferences;
 
 
@@ -121,10 +113,13 @@ public class FDXRegistrationRequest extends RegistrationRequest {
         return durationType;
     }
 
+
     public void setDurationType(List<String> durationType) {
         this.durationType = durationType;
     }
 
+    @Positive(message = "Duration Period cannot be zero or negative:" +
+            DCRCommonConstants.INVALID_META_DATA, groups = AttributeChecks.class)
     public Integer getDurationPeriod() {
         return durationPeriod;
     }
@@ -133,6 +128,8 @@ public class FDXRegistrationRequest extends RegistrationRequest {
         this.durationPeriod = durationPeriod;
     }
 
+    @Positive(message = "Lookback Period cannot be zero or negative:" +
+            DCRCommonConstants.INVALID_META_DATA, groups = AttributeChecks.class)
     public Integer getLookbackPeriod() {
         return lookbackPeriod;
     }
