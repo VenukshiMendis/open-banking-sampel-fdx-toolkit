@@ -16,6 +16,7 @@ import com.wso2.openbanking.accelerator.gateway.executor.dcr.DCRExecutor;
 import com.wso2.openbanking.accelerator.gateway.executor.model.OBAPIRequestContext;
 import com.wso2.openbanking.accelerator.gateway.executor.model.OBAPIResponseContext;
 import com.wso2.openbanking.accelerator.gateway.executor.model.OpenBankingExecutorError;
+import com.wso2.openbanking.fdx.gateway.util.FDXGatewayConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -25,29 +26,32 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * FDX Executor for signature validation, am app creation and API subscription for DCR.
+ * Executor for adding X-FAPI-INTERACTION-ID to DCR response headers.
  */
 public class FDXDCRExecutor extends DCRExecutor {
     private static final Log log = LogFactory.getLog(FDXDCRExecutor.class);
-    private static final String INTERACTION_ID_HEADER = "x-fapi-interaction-id";
 
-    private final Map<String, String> addedHeaders = new HashMap<>();
+    protected final Map<String, String> responseHeaders = new HashMap<>();
 
     @Override
     public void preProcessRequest(OBAPIRequestContext obapiRequestContext) {
-        if (obapiRequestContext.getMsgInfo().getHeaders().containsKey(INTERACTION_ID_HEADER)) {
-            String interactionId = obapiRequestContext.getMsgInfo().getHeaders().get(INTERACTION_ID_HEADER);
+        if (obapiRequestContext.getMsgInfo().getHeaders()
+                .containsKey(FDXGatewayConstants.INTERACTION_ID_HEADER)) {
+            String interactionId = obapiRequestContext.getMsgInfo().getHeaders()
+                    .get(FDXGatewayConstants.INTERACTION_ID_HEADER);
             try {
                 //Parse the interactionId as a UUID to validate if it's in the UUID format
                 UUID uuid = UUID.fromString(interactionId);
-                addedHeaders.put(INTERACTION_ID_HEADER, uuid.toString());
+                responseHeaders.put(FDXGatewayConstants.INTERACTION_ID_HEADER, uuid.toString());
             } catch (IllegalArgumentException e) {
                 log.error("Invalid interaction ID format. Must be a UUID.");
                 handleBadRequestError(obapiRequestContext, e.getMessage());
+                return;
             }
 
         } else {
             handleBadRequestError(obapiRequestContext, "Mandatory header x-fapi-interaction-id is not provided");
+            return;
         }
 
         super.preProcessRequest(obapiRequestContext);
@@ -62,7 +66,6 @@ public class FDXDCRExecutor extends DCRExecutor {
 
     @Override
     public void preProcessResponse(OBAPIResponseContext obapiResponseContext) {
-        obapiResponseContext.setAddedHeaders(addedHeaders);
         super.preProcessResponse(obapiResponseContext);
     }
 
@@ -70,11 +73,11 @@ public class FDXDCRExecutor extends DCRExecutor {
     @Override
     public void postProcessResponse(OBAPIResponseContext obapiResponseContext) {
         super.postProcessResponse(obapiResponseContext);
+        obapiResponseContext.setAddedHeaders(responseHeaders);
 
     }
 
     private void handleBadRequestError(OBAPIRequestContext obapiRequestContext, String message) {
-        //catch errors and set to context
         OpenBankingExecutorError error = new OpenBankingExecutorError("Bad request",
                 "invalid_header_fields", message, "400");
         ArrayList<OpenBankingExecutorError> executorErrors = obapiRequestContext.getErrors();

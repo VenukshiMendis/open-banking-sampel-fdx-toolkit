@@ -22,10 +22,9 @@ import com.wso2.openbanking.fdx.common.config.OpenBankingFDXConfigParser;
 import com.wso2.openbanking.fdx.identity.dcr.constants.FDXValidationConstants;
 import com.wso2.openbanking.fdx.identity.dcr.model.FDXRegistrationRequest;
 import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateMaximumPeriod;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.util.Map;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -47,12 +46,11 @@ public class MaximumPeriodValidator implements ConstraintValidator<ValidateMaxim
         Integer durationPeriod = fdxRegistrationRequest.getDurationPeriod();
         Integer lookbackPeriod = fdxRegistrationRequest.getLookbackPeriod();
 
-        Map<String, Object> configurationsMap = OpenBankingFDXConfigParser.getInstance().getConfiguration();
         //get maximum duration period and maximum lookback period from configs
-        String maximumDurationPeriodStr = (String) configurationsMap.get(
-                FDXValidationConstants.DCR_MAXIMUM_DURATION_PERIOD);
-        String maximumLookbackPeriodStr = (String) configurationsMap.get(
-                FDXValidationConstants.DCR_MAXIMUM_LOOKBACK_PERIOD);
+        String maximumDurationPeriodStr = (String) OpenBankingFDXConfigParser.getInstance()
+                .getConfiguration(FDXValidationConstants.DCR_MAXIMUM_DURATION_PERIOD);
+        String maximumLookbackPeriodStr = (String) OpenBankingFDXConfigParser.getInstance()
+                .getConfiguration(FDXValidationConstants.DCR_MAXIMUM_LOOKBACK_PERIOD);
 
         //validate duration period and look back period
         return validatePeriod(durationPeriod, maximumDurationPeriodStr, "Duration period",
@@ -66,10 +64,11 @@ public class MaximumPeriodValidator implements ConstraintValidator<ValidateMaxim
                                    ConstraintValidatorContext context) {
        try {
            //check whether maximum requestedPeriod value is provided as configs
-           if (requestedPeriod != null && maximumPeriodStr != null && !maximumPeriodStr.isEmpty()) {
+           if (requestedPeriod != null && StringUtils.isNotEmpty(maximumPeriodStr)) {
                int maximumPeriod = Integer.parseInt(maximumPeriodStr);
                if (requestedPeriod > maximumPeriod) {
                    context.disableDefaultConstraintViolation();
+                   log.error("Requested duration period/lookback period exceeds the maximum allowed period");
                    context.buildConstraintViolationWithTemplate(attributeName + " should not exceed " + maximumPeriod
                            + " days :" + DCRCommonConstants.INVALID_META_DATA).addConstraintViolation();
                    return false;
@@ -82,9 +81,5 @@ public class MaximumPeriodValidator implements ConstraintValidator<ValidateMaxim
 
        return true;
     }
-
-
-
-
 
 }

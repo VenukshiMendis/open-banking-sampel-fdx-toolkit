@@ -21,6 +21,8 @@ package com.wso2.openbanking.fdx.identity.dcr.validation.impl;
 import com.wso2.openbanking.fdx.identity.dcr.model.FDXRegistrationRequest;
 import com.wso2.openbanking.fdx.identity.dcr.utils.FDXDurationTypesEnum;
 import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateDurationPeriod;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 import javax.validation.ConstraintValidator;
@@ -30,7 +32,7 @@ import javax.validation.ConstraintValidatorContext;
  * Validator class for validating the duration period when the duration type contains TIME_BOUND.
  */
 public class DurationPeriodValidator implements ConstraintValidator<ValidateDurationPeriod, Object> {
-
+    private static final Log log = LogFactory.getLog(DurationPeriodValidator.class);
     @Override
     public boolean isValid(Object fdxRegistrationRequestObj, ConstraintValidatorContext constraintValidatorContext) {
 
@@ -39,7 +41,10 @@ public class DurationPeriodValidator implements ConstraintValidator<ValidateDura
         List<String> durationTypes = fdxRegistrationRequest.getDurationType();
 
         if (durationTypes != null && durationTypes.contains(FDXDurationTypesEnum.TIME_BOUND.getValue())) {
-            return durationPeriod != null;
+            if (durationPeriod == null) {
+                log.error("Duration period not provided for time bound duration type");
+                return false;
+            }
         }
 
         return true;

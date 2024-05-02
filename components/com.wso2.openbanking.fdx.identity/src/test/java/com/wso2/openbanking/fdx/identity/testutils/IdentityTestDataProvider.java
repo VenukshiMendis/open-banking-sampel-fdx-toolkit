@@ -82,11 +82,11 @@ public class IdentityTestDataProvider {
         String tlsClientAUth = "tls_client_auth";
 
         return new Object[][] {
-                { null, privateKeyJwt},
-                {"", privateKeyJwt},
+                { null, tlsClientAUth},
+                {"", tlsClientAUth},
                 {"private_key_jwt", privateKeyJwt},
                 {"tls_client_auth", tlsClientAUth},
-                {"sample_auth_method", privateKeyJwt}
+                {"sample_auth_method", tlsClientAUth}
         };
     }
 

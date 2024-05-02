@@ -1,5 +1,5 @@
 [server]
-hostname = "APIM_HOSTNAME"
+hostname = "localhost"
 node_ip = "127.0.0.1"
 #offset=0
 mode = "single" #single or ha
@@ -39,10 +39,10 @@ GetAllRolesOfUserEnabled = false
 
 # for registry data
 [database.shared_db]
-url = "DB_GOV_URL"
-username = "DB_USER"
-password = "DB_PASS"
-driver = "DB_DRIVER"
+url = "jdbc:mysql://localhost:3306/openbank_govdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "Heirs2013#"
+driver = "com.mysql.jdbc.Driver"
 
 [database.shared_db.pool_options]
 maxActive = "150"
@@ -53,14 +53,14 @@ validationQuery="SELECT 1"
 #Use below for oracle
 #validationQuery="SELECT 1 FROM DUAL"
 validationInterval="30000"
-defaultAutoCommit=false
+defaultAutoCommit=true
 
 # for api manager data
 [database.apim_db]
-url = "DB_APIMGT_URL"
-username = "DB_USER"
-password = "DB_PASS"
-driver = "DB_DRIVER"
+url = "jdbc:mysql://localhost:3306/openbank_apimgtdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "Heirs2013#"
+driver = "com.mysql.jdbc.Driver"
 
 [database.apim_db.pool_options]
 maxActive = "150"
@@ -71,14 +71,14 @@ validationQuery="SELECT 1"
 #Use below for oracle
 #validationQuery="SELECT 1 FROM DUAL"
 validationInterval="30000"
-defaultAutoCommit=false
+defaultAutoCommit=true
 
 # for am-config registry
 [database.config]
-url = "DB_AM_CONFIG_URL"
-username = "DB_USER"
-password = "DB_PASS"
-driver = "DB_DRIVER"
+url = "jdbc:mysql://localhost:3306/openbank_am_configdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "Heirs2013#"
+driver = "com.mysql.jdbc.Driver"
 
 [database.config.pool_options]
 maxActive = "150"
@@ -89,15 +89,15 @@ validationQuery="SELECT 1"
 #Use below for oracle
 #validationQuery="SELECT 1 FROM DUAL"
 validationInterval="30000"
-defaultAutoCommit=false
+defaultAutoCommit=true
 
 # for user management data
 [[datasource]]
 id="WSO2UM_DB"
-url = "DB_USER_STORE_URL"
-username = "DB_USER"
-password = "DB_PASS"
-driver = "DB_DRIVER"
+url = "jdbc:mysql://localhost:3306/openbank_userdb?autoReconnect=true&amp;useSSL=false"
+username = "root"
+password = "Heirs2013#"
+driver = "com.mysql.jdbc.Driver"
 jmx_enable=false
 pool_options.maxActive = "150"
 pool_options.maxWait = "60000"
@@ -107,7 +107,7 @@ pool_options.validationQuery="SELECT 1"
 #Use below for oracle
 #validationQuery="SELECT 1 FROM DUAL"
 pool_options.validationInterval="30000"
-pool_options.defaultAutoCommit=false
+pool_options.defaultAutoCommit=true
 
 [tenant_mgt]
 enable_email_domain = true
@@ -139,15 +139,15 @@ type = "hybrid"
 display_in_api_console = true
 description = "This is a hybrid gateway that handles both production and sandbox token traffic."
 show_as_token_endpoint_url = true
-service_url = "https://APIM_HOSTNAME:${mgt.transport.https.port}/services/"
+service_url = "https://localhost:${mgt.transport.https.port}/services/"
 username= "${admin.username}"
 password= "${admin.password}"
-ws_endpoint = "ws://APIM_HOSTNAME:9099"
-wss_endpoint = "wss://APIM_HOSTNAME:8099"
-http_endpoint = "http://APIM_HOSTNAME:${http.nio.port}"
-https_endpoint = "https://APIM_HOSTNAME:${https.nio.port}"
-websub_event_receiver_http_endpoint = "http://APIM_HOSTNAME:9021"
-websub_event_receiver_https_endpoint = "https://APIM_HOSTNAME:8021"
+ws_endpoint = "ws://localhost:9099"
+wss_endpoint = "wss://localhost:8099"
+http_endpoint = "http://localhost:${http.nio.port}"
+https_endpoint = "https://localhost:${https.nio.port}"
+websub_event_receiver_http_endpoint = "http://localhost:9021"
+websub_event_receiver_https_endpoint = "https://localhost:8021"
 
 [apim.sync_runtime_artifacts.gateway]
 skip_list.sequences = ["jsonConverter.xml"]
@@ -189,7 +189,7 @@ auth_token = ""
 properties.'publisher.reporter.class' = "com.wso2.openbanking.accelerator.gateway.reporter.OBAnalyticsMetricReporter"
 
 #[apim.key_manager]
-#service_url = "https://IS_HOSTNAME:9446${carbon.context}services/"
+#service_url = "https://localhost:9446${carbon.context}services/"
 #type = "WSO2-IS"
 #key_manager_client_impl = "org.wso2.carbon.apimgt.impl.AMDefaultKeyManagerImpl"
 #username = "$ref{super_admin.username}"
@@ -201,11 +201,11 @@ properties.'publisher.reporter.class' = "com.wso2.openbanking.accelerator.gatewa
 #key_validation_handler_impl = "org.wso2.carbon.apimgt.keymgt.handlers.DefaultKeyValidationHandler"
 
 [apim.key_manager.configuration]
-ServerURL = "https://IS_HOSTNAME:9446${carbon.context}services/"
+ServerURL = "https://localhost:9446${carbon.context}services/"
 Username = "${admin.username}"
 Password = "${admin.password}"
-TokenURL = "https://IS_HOSTNAME:${https.nio.port}/token"
-RevokeURL = "https://IS_HOSTNAME:${https.nio.port}/revoke"
+TokenURL = "https://localhost:${https.nio.port}/token"
+RevokeURL = "https://localhost:${https.nio.port}/revoke"
 
 #[apim.idp]
 #server_url = "https://localhost:${mgt.transport.https.port}"
@@ -313,7 +313,9 @@ HostnameVerifier = "AllowAll"
 "http.headers.preserve"="Content-Type,Date"
 
 [transport.passthru_https.listener.parameters]
-"SSLVerifyClient" = "optional"
+HttpsProtocols = "TLSv1.2"
+PreferredCiphers = "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+
 
 #================configs related to identity.xml=============
 
@@ -346,16 +348,10 @@ retry = "${carbon.protocol}://${carbon.host}:${carbon.management.port}/ob/authen
 custom_webapps = ["/keymanager-operations/"]
 
 [authentication.adaptive.event_publisher]
-url = "https://APIM_HOSTNAME:8280/"
+url = "https://localhost:8280/"
 authentication.basic.enable = true
 
 #================configs related to identity-event.properties=============
-
-[[event_handler]]
-name="userPostSelfRegistration"
-subscriptions=["POST_ADD_USER"]
-
-
 
 #data bridge config
 #[transport.receiver]
@@ -410,29 +406,37 @@ url = "jdbc:h2:./repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE"
 username="$ref{super_admin.username}"
 password="$ref{super_admin.password}"
 
-#[[open_banking.dcr.apim_rest_endpoints]]
-#app_creation = ""
-#key_generation = ""
-#api_retrieve = ""
-#api_subscribe = ""
-
 [open_banking.dcr]
 #jwks_endpoint_name = ""
 #app_name_claim = " "
-token_endpoint = "https://APIM_HOSTNAME:9443/oauth2/token"
+token_endpoint = "https://localhost:9443/oauth2/token"
 use_softwareIdForAppName = true
-#isRequestJWT = true
+isRequestJWT = false
 #[open_banking.dcr.jwks_retriever]
 #connection_timeout = 3000
 #read_timeout = 3000
 
+[open_banking.dcr.apim_rest_endpoints]
+app_creation = "api/am/devportal/v3/applications"
+key_generation = "api/am/devportal/v3/applications/application-id/map-keys"
+api_retrieve = "api/am/devportal/v3/apis"
+api_subscribe = "api/am/devportal/v3/subscriptions/multiple"
+retrieve_subscribe="api/am/devportal/v3/subscriptions"
+
 [[open_banking.dcr.regulatory_api]]
-api_name = "CDR-DynamicClientRegistration"
+#api_name = "CDR-DynamicClientRegistration"
+api_name = "FDXV600RecipientAPI"
 roles = "AISP,PISP"
 
 [[open_banking.dcr.regulatory_api]]
 api_name = "AccountandTransactionAPI"
 roles = "AISP"
+
+[open_banking.dcr.registration.software_environment_identification]
+ssa_property_name = "software_environment"
+# If both below values doesnt match, Then software_environment is default to production.
+ssa_property_value_for_sandbox = "sandbox"
+ssa_property_value_for_production = "production"
 
 #============executors=========================
 [[open_banking.gateway.openbanking_gateway_executors.type]]
@@ -444,7 +448,7 @@ priority = 1
 name = "com.wso2.openbanking.accelerator.gateway.executor.impl.mtls.cert.validation.executor.CertRevocationValidationExecutor"
 priority = 2
 [[open_banking.gateway.openbanking_gateway_executors.type.executors]]
-name = "com.wso2.openbanking.accelerator.gateway.executor.impl.api.resource.access.validation.APIResourceAccessValidationExecutor"
+name ="com.wso2.openbanking.accelerator.gateway.executor.impl.api.resource.access.validation.APIResourceAccessValidationExecutor"
 priority = 3
 [[open_banking.gateway.openbanking_gateway_executors.type.executors]]
 name = "com.wso2.openbanking.accelerator.gateway.executor.impl.consent.ConsentEnforcementExecutor"
@@ -465,21 +469,30 @@ priority = 1
 name = "com.wso2.openbanking.accelerator.gateway.executor.impl.api.resource.access.validation.APIResourceAccessValidationExecutor"
 priority = 2
 [[open_banking.gateway.openbanking_gateway_executors.type.executors]]
-name = "com.wso2.openbanking.accelerator.gateway.executor.dcr.DCRExecutor"
+name = "com.wso2.openbanking.fdx.gateway.executor.dcr.FDXDCRExecutor"
 priority = 3
 [[open_banking.gateway.openbanking_gateway_executors.type.executors]]
 name = "com.wso2.openbanking.accelerator.gateway.executor.impl.error.handler.OBDefaultErrorHandler"
 priority = 1000
 
+[[open_banking.gateway.openbanking_gateway_executors.type]]
+name = "Consent"
+[[open_banking.gateway.openbanking_gateway_executors.type.executors]]
+name = "com.wso2.openbanking.accelerator.gateway.executor.impl.selfcare.portal.UserPermissionValidationExecutor"
+priority = 1
+
 [open_banking.apim.analytics]
 enable=false
+
+[open_banking.analytics.elk]
+enabled = false
 
 [open_banking.data_publishing]
 enable = false
 username="$ref{super_admin.username}@carbon.super"
 password="$ref{super_admin.password}"
-server_url = "{tcp://BI_HOSTNAME:7612}"
-#auth_url = "{ssl://BI_HOSTNAME:7612}"
+server_url = "{tcp://localhost:7612}"
+#auth_url = "{ssl://localhost:7612}"
 protocol = "Thrift"
 pool_size = 10
 queue_size = 32768
@@ -592,6 +605,10 @@ cache_expiry = 3600
 [open_banking.gateway.certificate_management.certificate.revocation]
 enabled = true
 retry_count = 3
+connect_timeout = 10000
+connection_request_timeout = 10000
+socket_timeout = 10000
+
 [open_banking.gateway.certificate_management.certificate.revocation.proxy]
 enabled = false
 host = "PROXY_HOSTNAME"
@@ -634,3 +651,30 @@ max_connections_per_route = 1500
 queue_size = 32768
 worker_thread_count = 10
 event_executor = "com.wso2.openbanking.accelerator.common.event.executor.DefaultOBEventExecutor"
+
+#========================OB JWS Signature Validation & Response Signing Configurations======================
+[open_banking.common.identity.cache]
+cache_modified_expiry_minuites=30
+cache_access_expiry_minuites=30
+
+[open_banking.jws_signature.signature_validation]
+enabled= false
+
+[[open_banking.jws_signature.signature_validation.allowed_algorithms]]
+algorithm="PS256"
+
+[open_banking.jws_signature.response_signing]
+enabled= false
+allowed_algorithm="PS256"
+
+[open_banking.ob_identity_retriever.server]
+signing_cert_alias="wso2carbon"
+sandbox_signing_cert_alias="wso2carbon"
+signing_cert_kid="1234"
+sandbox_signing_cert_kid="5678"
+
+[open_banking.ob_identity_retriever.jwks_retriever]
+size_limit=51200
+connection_timeout=2000
+read_timeout=2000
+

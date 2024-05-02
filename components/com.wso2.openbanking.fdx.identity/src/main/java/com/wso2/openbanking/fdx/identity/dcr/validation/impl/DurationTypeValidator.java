@@ -20,6 +20,8 @@ package com.wso2.openbanking.fdx.identity.dcr.validation.impl;
 
 import com.wso2.openbanking.fdx.identity.dcr.utils.FDXDurationTypesEnum;
 import com.wso2.openbanking.fdx.identity.dcr.validation.annotation.ValidateDurationType;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 import javax.validation.ConstraintValidator;
@@ -29,6 +31,7 @@ import javax.validation.ConstraintValidatorContext;
  * Validator class for duration type validation.
  */
 public class DurationTypeValidator implements ConstraintValidator<ValidateDurationType, Object> {
+    private static final Log log = LogFactory.getLog(DurationTypeValidator.class);
     @Override
     public boolean isValid(Object durationTypes, ConstraintValidatorContext constraintValidatorContext) {
 
@@ -40,12 +43,10 @@ public class DurationTypeValidator implements ConstraintValidator<ValidateDurati
                 if (durationTypeObj instanceof String) {
                     String durationType = (String) durationTypeObj;
                     if (!allowedDurationTypes.contains(durationType)) {
+                        log.error(String.format("Invalid duration type: %s" , durationType));
                        return false;
                     }
-                } else {
-                    return false;
                 }
-
             }
         }
         return true;

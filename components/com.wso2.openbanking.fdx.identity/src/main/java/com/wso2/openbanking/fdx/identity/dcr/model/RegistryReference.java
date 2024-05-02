@@ -86,8 +86,8 @@ public class RegistryReference {
             return false;
         }
         RegistryReference registryReference = (RegistryReference) obj;
-        //Two registry references are considered equal if they have the same values for
-        // registeredEntityName, registeredEntityId, and registry
+        //Check if the two registry references have the same values for registeredEntityName,
+        // registeredEntityId, and registry
         return Objects.equals(registeredEntityName, registryReference.registeredEntityName) &&
                 Objects.equals(registeredEntityId, registryReference.registeredEntityId) &&
                 Objects.equals(registry, registryReference.registry);
